@@ -84,7 +84,15 @@ class EntityManager {
         $this->config = $config['database'];
     }
     
-    public function getCredentials($dbKey) {
+    public function getCredentials($dbKey = null) {
+        if(is_null($dbKey)) {
+            if(is_null($this->defaultConnection)) {
+                throw new \Exception('dbkey not passed and no default key specified in entity manager');
+            }
+            
+            $dbKey = $this->defaultConnection;
+        }
+        
         if(!array_key_exists($dbKey, $this->config)) {
             throw new \Exception('dbkey does not exist in entity manager credentials');
         }
