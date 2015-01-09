@@ -37,4 +37,12 @@ class EntityManagerTest extends \tests\BaseTest{
     }
     
   
+    public function testGetCredentials() {
+        $manager = EntityManager::getInstance();       
+        
+        $credentials = $manager->getCredentials('mysql');
+        
+        $this->assertTrue(array_key_exists('host', $credentials));
+        $this->assertEquals('localhost', $credentials['host']);
+    }
 }

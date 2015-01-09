@@ -84,6 +84,17 @@ class EntityManager {
         $this->config = $config['database'];
     }
     
+    public function getCredentials($dbKey) {
+        if(!array_key_exists($dbKey, $this->config)) {
+            throw new \Exception('dbkey does not exist in entity manager credentials');
+        }
+        
+        $config = $this->config[$dbKey];
+        
+        return $config['credentials'];
+    }
     
-    
+    public function getKeys() {
+        return array_keys($this->connections);
+    }
 }
