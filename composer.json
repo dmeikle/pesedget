@@ -1,0 +1,29 @@
+{
+    "name": "gossamer/pesedget",
+    "type": "library",
+    "description": "php database entity manager",
+    "keywords": ["php","database","entity manager"],
+    "homepage": "https://github.com/dmeikle/pesedget",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Dave Meikle",
+            "email": "david@quantumunit.com",
+	    "homepage": "http://www.quantumunit.com",
+	    "role": "Developer"
+        }
+    ],
+    "minimum-stability": "stable",
+    "require": {
+	"monolog/monolog": "1.*",
+        "gossamer/caching": "dev-master"
+    },
+    "require-dev": {
+	"phpunit/phpunit": "4.0.*"
+    },
+    "autoload": {
+	"psr-0": {
+            "Gossamer\\Pesedget": "src/"
+        }
+    }
+}
