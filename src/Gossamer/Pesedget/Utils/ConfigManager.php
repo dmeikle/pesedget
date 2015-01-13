@@ -59,15 +59,7 @@ class ConfigManager implements ManagerInterface
      */
     private function filePutContentsAtomic($filename, $content)
     {
-        // if (!file_exists($this->workingPath . $filename)) {
-        	// try{
-        		// mkdir($this->workingPath, 0777, true);
-        	// }catch(\Exception $e){
-        		// error_log('unable to write to '.$this->workingPath);
-				// error_log($e->getMessage());
-        	// }
-//             
-        // }
+ 
         $temp = tempnam($this->workingPath, 'temp');
 
 
