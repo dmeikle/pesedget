@@ -29,7 +29,7 @@ class DBConnection
 
     private $rows;
 
-    private $conn = null;
+    protected $conn = null;
     
     private $rowCount = 0;
     
