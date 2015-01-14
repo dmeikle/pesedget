@@ -163,7 +163,7 @@ class QueryBuilder implements ManagerInterface
 
         //did we NOT receive an overriding connection? ok, create a default instance
         if(is_null($this->dbConnection)) {
-echo 'creating new connection';
+
             $this->dbConnection = new DBConnection();
         }
 
