@@ -34,7 +34,7 @@ class ColumnMappings
      * @param DBConnection  connection
      */
     public function __construct(DBConnection $dbConnection){
-        if(!defined(__CACHE_DIRECTORY)){
+        if(strlen(__CACHE_DIRECTORY) < 1){
             throw new \RuntimeException('__CACHE_DIRECTORY must be defined during bootstrap');
         }
 
@@ -111,5 +111,7 @@ class ColumnMappings
         return $config->toArray();
 
     }
+    
+    
 
 }
