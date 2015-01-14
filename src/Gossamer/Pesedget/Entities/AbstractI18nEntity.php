@@ -2,7 +2,7 @@
 
 namespace Gossamer\Pesedget\Entities;
 
-use Gossamer\Pesedget\Gossamer\Pesedget\Entities\AbstractEntity;
+use GossamerPesedget\Entities\AbstractEntity;
 
 abstract class AbstractI18nEntity extends AbstractEntity
 {
