@@ -6,6 +6,7 @@ namespace Gossamer\Pesedget\Database;
 
 use Gossamer\Pesedget\Entities\AbstractEntity;
 use Gossamer\Pesedget\Database\ColumnMappings;
+use Gossamer\Pesedget\Database\EntityManager;
 use Monolog\Logger;
 
 
@@ -32,15 +33,21 @@ class DBConnection
     
     private $rowCount = 0;
     
-    public function __construct($credentials = null) {
+    public function __construct($credentials = null) {        
         if(!is_null($credentials)) {
-            $this->user = $credentials['username'];
-            $this->pass = $credentials['password'];
-            $this->db = $credentials['dbName'];
-            $this->host = $credentials['host'];
+            $this->initCredentials($credentials);
         } else {
             //uh-oh... no db credentials exist.
+            $this->initCredentials(EntityManager::getInstance()->getCredentials());
         }
+    }
+    
+    private function initCredentials(array $credentials) {
+        
+        $this->user = $credentials['username'];
+        $this->pass = $credentials['password'];
+        $this->db = $credentials['dbName'];
+        $this->host = $credentials['host'];
     }
 
     public function getRowCount() {

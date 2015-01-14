@@ -12,11 +12,21 @@ use Gossamer\Pesedget\Database\EntityManager;
  */
 class DBConnectionTest extends \tests\BaseTest{
     
-    public function testConnection() {
+    public function testTheConnection() {
         
         $conn = EntityManager::getInstance()->getConnection();
    
         $result = $conn->query("select * from Staff limit 10");
        
     }
+    
+    public function testConnectionConstructorNoCredentials() {
+        $conn = new DBConnection();
+        
+        $result = $conn->query("select * from Staff limit 10");
+        
+        print_r($result);
+    }
+    
+   
 }
