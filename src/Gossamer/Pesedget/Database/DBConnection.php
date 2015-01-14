@@ -4,7 +4,7 @@
 namespace Gossamer\Pesedget\Database;
 
 
-use GossamerPesedget\Entities\AbstractEntity;
+use Gossamer\Pesedget\Entities\AbstractEntity;
 use Gossamer\Pesedget\Database\ColumnMappings;
 use Gossamer\Pesedget\Database\EntityManager;
 use Monolog\Logger;
