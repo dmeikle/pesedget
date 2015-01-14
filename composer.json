@@ -23,8 +23,8 @@
     },
     "autoload": {
 	"psr-0": {
-            "Gossamer\\Pesedget": "src/"
-        },
-        "files": [ "../includes/configuration.php"]
+            "Gossamer\\Pesedget": "src/",
+            "files": [ "includes/configuration.php"]
+        }
     }
 }
