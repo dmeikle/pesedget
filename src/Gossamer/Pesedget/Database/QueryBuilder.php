@@ -11,7 +11,7 @@ use Gossamer\Pesedget\Database\DBConnection;
 use Gossamer\Pesedget\Database\ColumnMappings;
 
 
-class QueryBuilderManager implements ManagerInterface
+class QueryBuilder implements ManagerInterface
 {
 
     const SAVE_QUERY = 'save';
