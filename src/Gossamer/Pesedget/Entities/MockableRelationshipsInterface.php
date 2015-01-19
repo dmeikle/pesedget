@@ -1,6 +1,6 @@
 <?php
 
-namespace Gossamer\Pesedget\Database;
+namespace Gossamer\Pesedget\Entities;
 
 /**
  * MockableRelationshipsInterface
