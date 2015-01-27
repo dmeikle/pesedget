@@ -392,7 +392,12 @@ class QueryBuilder implements ManagerInterface {
             if (!in_array($key, $this->tableColumns)) {
                 continue;
             }
-            $values .= ', `' . $key . '` = \'' . $val . '\'';
+            if (strtolower($value) == 'null') {
+                $values .= ', `' . $key . '` = null';
+            } else {
+                $values .= ', `' . $key . '` = \'' . $val . '\'';
+            }
+            
         }
 
         return substr($values, 1);
