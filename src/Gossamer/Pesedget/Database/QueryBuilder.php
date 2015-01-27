@@ -383,6 +383,7 @@ class QueryBuilder implements ManagerInterface {
 
     private function buildUpdateStatement() {
         $values = '';
+        $modifiedColumn = false;
         foreach ($this->values as $key => $val) {
             //don't try to update primary keys
             if (in_array($key, $this->primaryKeys)) {
@@ -397,9 +398,15 @@ class QueryBuilder implements ManagerInterface {
             } else {
                 $values .= ', `' . $key . '` = \'' . $val . '\'';
             }
-            
+            if($key == 'lastModified') {
+                $modifiedColumn = true;
+            }
         }
-
+        
+        if(!$modifiedColumn && in_array('lastModified', $this->tableColumns)) {
+            $values .= ', `lastModified` = null';
+        }
+        
         return substr($values, 1);
     }
 
@@ -410,7 +417,8 @@ class QueryBuilder implements ManagerInterface {
 
     private function parseValuesToInsert() {
         $values = '';
-
+        $modifiedColumn = false;
+        
         if (is_array(current($this->values) && $this->isBulkInsert)) {
 
             return $this->parseArray();
@@ -429,18 +437,27 @@ class QueryBuilder implements ManagerInterface {
             } else {
                 $values .= ', \'' . ($value) . '\'';
             }
+            if($key == 'lastModified') {
+                $modifiedColumn = true;
+            }
         }
 
+        if(!$modifiedColumn && in_array('lastModified', $this->tableColumns)) {
+            $values .= ', `lastModified` = null';
+        }
+        
         return ' VALUES (' . substr($values, 1) . ')';
     }
 
     private function parseArray() {
         $retval = '';
         $this->isBulkInsert = true;
+        
+        
         foreach ($this->values as $row) {
             $rowVal = '';
             foreach ($row as $key => $value) {
-
+                
                 if (!in_array($key, $this->tableColumns)) {
                     continue;
                 }
@@ -453,13 +470,18 @@ class QueryBuilder implements ManagerInterface {
                 } else {
                     $rowVal .= ', \'' . ($value) . '\'';
                 }
+                
             }
+            
             if (strlen($rowVal) > 4) {
                 //only add if we hold a value
                 $retval .= ', (' . substr($rowVal, 1) . ')';
             }
+            
         }
 
+        
+        
         return ' VALUES ' . substr($retval, 1);
     }
 
