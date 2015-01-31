@@ -220,7 +220,7 @@ class QueryBuilder implements ManagerInterface {
         if (!is_null($this->fields)) {
             $select .= implode(',', $this->fields);
         } elseif (!$this->queryingI18n) {
-            $select .= '*'; //, ' . $this->tableName . '.id as ' . $this->tableName . '_id';
+            $select .= '*, ' . $this->tableName . '.id as ' . $this->tableName . '_id';
         } else {
             //don't build a custom column since the 'id' column does not exist in i18n tables
             $select .= '*';
