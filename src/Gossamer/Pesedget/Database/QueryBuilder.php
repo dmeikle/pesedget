@@ -219,7 +219,7 @@ class QueryBuilder implements ManagerInterface {
 //        }
         if (!is_null($this->fields)) {
             $select .= implode(',', $this->fields);
-        }elseif (!is_null($this->joinTables) && array_key_exists('id', $this->tableColumns)) {
+        }elseif (array_key_exists('id', $this->tableColumns)) {
             $select .= '*, ' . $this->tableName . '.id as ' . $this->tableName . '_id';
         }elseif($queryType == self::CHILD_ONLY) {
             $select .= '*'; //this is because there's no guarantee we have an id column on child only queries
