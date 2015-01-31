@@ -221,7 +221,7 @@ class QueryBuilder implements ManagerInterface {
             $select .= implode(',', $this->fields);
         }elseif($queryType == self::CHILD_ONLY) {
             $select .= '*'; //this is because there's no guarantee we have an id column on child only queries
-        } elseif (!$this->queryingI18n && substr($this->tableName, -4) != 'I18n') {
+        } elseif (!$this->queryingI18n && substr($this->tableName, -4) != 'I18n' && array_key_exists($this->tableName . '_id', $this->tableColumns)) {
             $select .= '*, ' . $this->tableName . '.id as ' . $this->tableName . '_id';
         } else {
             //don't build a custom column since the 'id' column does not exist in i18n tables
