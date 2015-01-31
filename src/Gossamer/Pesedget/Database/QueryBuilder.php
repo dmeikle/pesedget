@@ -117,9 +117,9 @@ class QueryBuilder implements ManagerInterface {
         } elseif ($queryType == self::SAVE_QUERY) {
             $query = $this->buildSaveStatement();
         } elseif ($queryType == self::GET_ITEM_QUERY) {
-            $query = $this->buildSelectStatement(true, $entity);
+            $query = $this->buildSelectStatement(true, $entity, $queryType);
         } elseif ($queryType == self::GET_ALL_ITEMS_QUERY) {
-            $query = $this->buildSelectStatement(false, $entity);
+            $query = $this->buildSelectStatement(false, $entity, $queryType);
         } elseif ($queryType == self::GET_COUNT_QUERY) {
             $query = $this->buildCountStatement();
         }
@@ -212,13 +212,15 @@ class QueryBuilder implements ManagerInterface {
         return $select;
     }
 
-    private function buildSelectStatement($firstRowOnly = false, SQLInterface $entity) {
+    private function buildSelectStatement($firstRowOnly = false, SQLInterface $entity, $queryType) {
         $select = 'SELECT ';
 //        if(!$firstRowOnly) {
 //            $select .= 'SQL_CALC_FOUND_ROWS ';
 //        }
         if (!is_null($this->fields)) {
             $select .= implode(',', $this->fields);
+        }elseif($queryType == self::CHILD_ONLY) {
+            $select .= '*'; //this is because there's no guarantee we have an id column on child only queries
         } elseif (!$this->queryingI18n && substr($this->tableName, -4) != 'I18n') {
             $select .= '*, ' . $this->tableName . '.id as ' . $this->tableName . '_id';
         } else {
