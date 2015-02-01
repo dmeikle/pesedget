@@ -446,9 +446,9 @@ class QueryBuilder implements ManagerInterface {
             }
         }
 
-        if(!$modifiedColumn && in_array('lastModified', $this->tableColumns)) {
-            $values .= ', `lastModified` = null';
-        }
+//        if(!$modifiedColumn && in_array('lastModified', $this->tableColumns)) {
+//            $values .= ', `lastModified` = null';
+//        }
         
         return ' VALUES (' . substr($values, 1) . ')';
     }
