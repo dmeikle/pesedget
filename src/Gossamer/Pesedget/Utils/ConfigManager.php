@@ -62,7 +62,6 @@ class ConfigManager implements ManagerInterface
  
         $temp = tempnam($this->workingPath, 'temp');
 
-
         if (!($f = @fopen($temp, 'wb'))) {
             $temp = $this->workingPath . DIRECTORY_SEPARATOR . uniqid('temp');
             if (!($f = @fopen($temp, 'wb'))) {
