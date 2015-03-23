@@ -417,14 +417,15 @@ class QueryBuilder implements ManagerInterface {
     public function setBulkInsert(array $values) {
         $this->isBulkInsert = true;
         $this->values = $values;
+       
     }
 
     private function parseValuesToInsert() {
         $values = '';
         $modifiedColumn = false;
         
-        if (is_array(current($this->values) && $this->isBulkInsert)) {
 
+        if (is_array(current($this->values)) && $this->isBulkInsert) {
             return $this->parseArray();
         }
 
@@ -465,7 +466,7 @@ class QueryBuilder implements ManagerInterface {
                 if (!in_array($key, $this->tableColumns)) {
                     continue;
                 }
-                if (!in_array($key, $this->fieldNames)) {
+                if (!is_null($this->fieldNames) && !in_array($key, $this->fieldNames)) {
                     $this->fieldNames[] = $key;
                 }
 
