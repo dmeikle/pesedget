@@ -154,7 +154,7 @@ class DBConnection
             return;
         }
         
-        $insertId = mysqli_insert_id();
+        $insertId = mysqli_insert_id($this->getConnection());
 
         return $insertId;
     }

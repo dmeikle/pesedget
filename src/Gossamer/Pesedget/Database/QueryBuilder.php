@@ -526,14 +526,22 @@ class QueryBuilder implements ManagerInterface {
     private function parseFieldNames() {
 
         if (is_null($this->fields)) {
+           
             if (is_null($this->fieldNames)) {
-                return '(`' . implode('`,`', $this->tableColumns) . '`)';
+                
+                $firstRow = ($this->values[0]);
+               //we only want column names for passed values so that our insert column count matches
+                $passedColumns = array_intersect(array_keys($firstRow), $this->tableColumns);
+       
+                return '(`' . implode('`,`', $passedColumns) . '`)';
             }
             return '(`' . implode('`,`', $this->fieldNames) . '`)';
         }
+        
         if (!is_array($this->fields)) {
             return '(`' . $this->fields . '`)';
         }
+        
         return '(`' . implode('`,`', $this->fields) . '`)';
     }
 
