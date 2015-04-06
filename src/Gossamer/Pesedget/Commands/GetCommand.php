@@ -55,7 +55,7 @@ class GetCommand extends AbstractCommand {
 
         }
 
-        return array($entityName => current($firstResult));
+        return array($entityName => is_array($firstResult) ? current($firstResult) : array());
     }
 
     private function getI18nValuesForPadding() {
