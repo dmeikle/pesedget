@@ -34,7 +34,7 @@ class SaveCommand extends AbstractCommand {
                 $this->saveI18nValues($result,  $requestParams, $requestParams['locale']);
                 $this->saveChildTableParams($result, $requestParams);
                 $this->saveOneToManyJoins($result, $requestParams);
-            }elseif(intval($requestParams['id']) > 0){      
+            }elseif(array_key_exists('id', $requestParams) && intval($requestParams['id']) > 0){      
           
                 if(array_key_exists('locale', $requestParams)) {
                     $this->saveI18nValues($requestParams['id'], $requestParams, $requestParams['locale']); 

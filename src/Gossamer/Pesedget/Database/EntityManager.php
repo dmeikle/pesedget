@@ -58,7 +58,7 @@ class EntityManager {
         }
         
         if(!array_key_exists($dbKey, $this->config)) {
-            throw new Exception('dbkey does not exist in entity manager collection');
+            throw new \Exception('dbkey does not exist in entity manager collection');
         }
         
         return $this->_getConnection($dbKey);
