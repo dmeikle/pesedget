@@ -15,6 +15,7 @@ use Gossamer\Pesedget\Database\QueryBuilder;
 use Gossamer\Pesedget\Database\DBConnection;
 use Gossamer\Pesedget\Database\EntityManager;
 use tests\entities\TaxRate;
+use tests\entities\Staff;
 
 /**
  * QueryBuilderTest
@@ -30,18 +31,47 @@ class QueryBuilderTest  extends \tests\BaseTest{
         echo $builder->getQuery(new TaxRate(), QueryBuilder::SAVE_QUERY);
     }
     
+    /**
+     * @group bulkcart
+     */
+    public function testSaveCartArray() {
+        $builder = new QueryBuilder(array('dbConnection' => EntityManager::getInstance()->getConnection()));
+        
+        $builder->setBulkInsert($this->getTaxRateArrayValues());
+        echo $builder->getQuery(new TaxRate(), QueryBuilder::SAVE_QUERY);
+    }
+    
+    
+    /**
+     * @group bulk
+     */
     public function testSaveArray() {
         $builder = new QueryBuilder(array('dbConnection' => EntityManager::getInstance()->getConnection()));
         
-        $builder->setBulkInsert($this->getArrayValues());
-        echo $builder->getQuery(new TaxRate(), QueryBuilder::SAVE_QUERY);
+        $builder->setBulkInsert($this->getStaffArrayValues());
+        echo $builder->getQuery(new Staff(), QueryBuilder::SAVE_QUERY);
     }
     
     private function getValues() {
         return array( 'id' => '1', 'States_id' => 1, 'taxRate' => .05);
     }
-    
-    private function getArrayValues() {
+    private function getStaffArrayValues() {
+        return array (
+            array (
+                'id' => 1,
+                'firstname' => 'phpunit'
+            ),
+            array(
+                'id' => 3,
+                'firstname' => 'phpunit2'
+            ),
+            array(
+                'id' => 4,
+                'firstname' => 'phpunit3'
+            )
+        );
+    }
+    private function getTaxRateArrayValues() {
         return array (
             array (
                 'States_id' => 1,

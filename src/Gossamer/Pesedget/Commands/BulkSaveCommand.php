@@ -16,10 +16,10 @@ class BulkSaveCommand extends AbstractCommand {
      */
     public function execute($requestParams = array()){
 
-        $this->getQueryBuilder()->setBulkValues($requestParams);
+        $this->getQueryBuilder()->setBulkInsert($requestParams);
        
         $query = $this->getQueryBuilder()->getQuery($this->entity, QueryBuilder::SAVE_QUERY, QueryBuilder::PARENT_ONLY);
-
+echo $query."\r\n";
         $this->beginTransaction();
         try{
             $result = $this->query("$query", FALSE);
