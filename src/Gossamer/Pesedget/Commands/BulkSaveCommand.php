@@ -2,13 +2,10 @@
 namespace Gossamer\Pesedget\Commands;
 
 use Gossamer\Pesedget\Commands\AbstractCommand;
-use Gossamer\Pesedget\Entities\OneToManyChildInterface;
 use Gossamer\Pesedget\Database\QueryBuilder;
-use Gossamer\Pesedget\Entities\AbstractI18nEntity;
-use Gossamer\Pesedget\Entities\MultiRowInterface;
-use Gossamer\Pesedget\Entities\OneToManyJoinInterface;
 
-class SaveCommand extends AbstractCommand {
+
+class BulkSaveCommand extends AbstractCommand {
    
 
     /**
