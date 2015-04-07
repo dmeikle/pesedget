@@ -115,6 +115,77 @@ class DBConnection
         return $this->conn;
     }
 
+    public function preparedQuery($query, array $params, $fetch = true) {
+        
+        $this->lastQuery = $query;
+      
+        //mysql_select_db($this->db);
+        if(!is_null($this->logger)) {
+            $this->logger->addDebug(utf8_decode($query));
+        }
+        
+        $stmt = $this->getConnection()->prepare($query);
+        //with bind() the first element must be a list of datatypes that correspond
+        //to each of the remaining elements of the array. 
+        //eg: (ssi, 'dave', 'meikle', '10')
+//        i - integer
+//        d - double
+//        s - string
+//        b - BLOB        
+       
+        //stmt does not accept an array so we'll bypass with CUFA method 
+        $bindNames[] = array_shift($params);
+        for($i = 0; $i < count($params); $i++) {
+            $bindName = 'bind' . $i;
+            $$bindName = $params[$i];
+            $bindNames[] = &$$bindName;
+        }
+        
+        call_user_func_array(array($stmt, 'bind_param'), $bindNames);
+        $results = $stmt->execute();
+        
+        //since we are using PDO we need to handle this differently than mysqli
+        if(strtolower(substr($query,0,6)) == 'delete' ) {
+            return 0;
+        }elseif(strtolower(substr($query,0,6)) == 'insert') {           
+            return $stmt->insert_id;
+        }elseif(strtolower(substr($query,0,6) =='update')) {
+            return;
+        } else {
+            
+            $stmt->store_result();
+            $this->rowCount = $stmt->num_rows;
+        }
+        
+        $retval = $this->fetchArray($stmt);
+        unset($stmt);
+        
+       return $retval;
+       
+    }
+    
+    private function fetchArray ($stmt) {
+        $meta = $stmt->result_metadata(); 
+        while ($field = $meta->fetch_field()) 
+        { 
+            $params[] = &$row[$field->name]; 
+        } 
+
+        call_user_func_array(array($stmt, 'bind_result'), $params); 
+
+        while ($stmt->fetch()) { 
+            foreach($row as $key => $val) 
+            { 
+                $c[$key] = $val; 
+            } 
+            $result[] = $c; 
+        } 
+
+        $stmt->close(); 
+        
+        return $result;
+    }
+    
     public function query($query, $fetch = true){
 
         $this->lastQuery = $query;
@@ -127,9 +198,7 @@ class DBConnection
         
         $results = mysqli_query($this->getConnection(), utf8_decode($query));
         
-        if (!$results) {
-          //  die('Invalid query: ' . mysqli_error());
-        }
+       
         if(strtolower(substr($query,0,6)) == 'delete' ) {
             return 0;
         }elseif(strtolower(substr($query,0,6)) == 'insert') {           
@@ -158,6 +227,7 @@ class DBConnection
 
         return $insertId;
     }
+    
 
     public function getTableColumnMappings(AbstractEntity $entity){
         if(!$entity instanceof AbstractEntity){

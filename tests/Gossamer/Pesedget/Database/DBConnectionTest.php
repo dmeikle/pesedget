@@ -29,4 +29,15 @@ class DBConnectionTest extends \tests\BaseTest{
     }
     
    
+    /**
+     * @group pdo
+     */
+    public function testPreparedStatement() {
+        $conn = new DBConnection();
+        
+        $result = $conn->preparedQuery('select * from Staff where id = ?', array('i', '2'));
+        echo "num rows: ".$conn->getRowCount()."\r\n";
+        echo "this is result:\r\n";
+        print_r($result);
+    }
 }
