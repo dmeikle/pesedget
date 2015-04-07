@@ -172,7 +172,7 @@ class DBConnection
         } 
 
         call_user_func_array(array($stmt, 'bind_result'), $params); 
-
+        $result = array();
         while ($stmt->fetch()) { 
             foreach($row as $key => $val) 
             { 
