@@ -75,12 +75,11 @@ class DatasourceFactory {
         $parser->setFilePath($ymlFilePath);
         $dsConfig = $parser->loadConfig();
         $sourceName = trim($sourceName, "<br>");
-print_r($dsConfig);
-echo $dsConfig['database'][$sourceName]['class']."\r\n";
+
         $datasourceClass = $dsConfig['database'][$sourceName]['class'];
 
         $datasource = new $datasourceClass($logger);
-        print_r($datasource);
+   
         unset($parser);
         $datasource->setDatasourceKey($sourceName);
 
