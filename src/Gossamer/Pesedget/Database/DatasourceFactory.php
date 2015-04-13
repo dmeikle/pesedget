@@ -35,15 +35,15 @@ class DatasourceFactory {
     public function getDatasource($sourceName, Logger $logger) {
         $datasources = $this->getDatasources();
 
-        if (!array_key_exists($sourceName, $datasources)) {
-           // try {
+        if (!array_key_exists($sourceName, $datasources) || !is_object($datasources[$sourceName])) {
+            try {
                 $ds = $this->buildDatasourceInstance($sourceName, $logger);
                 $datasources[$sourceName] = $ds;
-//            } catch (\Exception $e) {
-//                echo $e->getMessage();
-//                $logger->addError($sourceName . ' is not a valid datasource');
-//                throw new \Exception($sourceName . ' is not a valid datasource', 580);
-//            }
+            } catch (\Exception $e) {
+                echo $e->getMessage();
+                $logger->addError($sourceName . ' is not a valid datasource');
+                throw new \Exception($sourceName . ' is not a valid datasource', 580);
+            }
         }
 
         return $datasources[$sourceName];
