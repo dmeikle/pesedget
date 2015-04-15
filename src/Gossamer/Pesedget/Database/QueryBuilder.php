@@ -87,12 +87,13 @@ class QueryBuilder implements ManagerInterface {
         }
     }
 
-    private function init(SQLInterface $entity, $i18nQueryType, $queryType) {
-        $this->tableColumns = null;
-        $this->fieldNames = null;
-        $this->fields = null;
-        $this->i18nJoin = null;
-
+    private function init(SQLInterface $entity, $i18nQueryType, $queryType, $resetParams) {
+        if($resetParams) {
+            $this->tableColumns = null;
+            $this->fieldNames = null;
+            $this->fields = null;
+            $this->i18nJoin = null;
+        }
         $this->setTablename($entity, $i18nQueryType);
 
 
@@ -101,7 +102,7 @@ class QueryBuilder implements ManagerInterface {
         $this->loadActualColumns($entity, $i18nQueryType);
     }
 
-    public function getQuery(SQLInterface $entity, $queryType = 'getall', $i18nQueryType = null, $queryingI18n = false) {
+    public function getQuery(SQLInterface $entity, $queryType = 'getall', $i18nQueryType = null, $queryingI18n = false, $resetParams = true) {
         if (!$entity instanceof SQLInterface) {
             throw new \RuntimeException('entity must implement SQLInterface');
         }
@@ -110,7 +111,7 @@ class QueryBuilder implements ManagerInterface {
         }
         $this->queryingI18n = $queryingI18n;
 
-        $this->init($entity, $i18nQueryType, $queryType);
+        $this->init($entity, $i18nQueryType, $queryType, $resetParams);
         $query = '';
         if ($queryType == self::DELETE_QUERY) {
             $query = $this->buildDeleteStatement();
@@ -217,6 +218,7 @@ class QueryBuilder implements ManagerInterface {
 //        if(!$firstRowOnly) {
 //            $select .= 'SQL_CALC_FOUND_ROWS ';
 //        }
+     
         if (!is_null($this->fields)) {
             $select .= implode(',', $this->fields);
         }elseif (in_array('id', $this->tableColumns)) {
@@ -491,7 +493,9 @@ class QueryBuilder implements ManagerInterface {
     }
 
     private function parseDirectives() {
-
+        if(is_null($this->andFilter)) {
+            return;
+        }
         foreach ($this->andFilter as $key => $value) {
 
             if (strpos($key, 'directive::') === FALSE) {
