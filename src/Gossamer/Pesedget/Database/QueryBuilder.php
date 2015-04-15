@@ -89,11 +89,11 @@ class QueryBuilder implements ManagerInterface {
 
     private function init(SQLInterface $entity, $i18nQueryType, $queryType, $resetParams) {
         if($resetParams) {
-            $this->tableColumns = null;
-            $this->fieldNames = null;
             $this->fields = null;
-            $this->i18nJoin = null;
         }
+        $this->tableColumns = null;
+        $this->fieldNames = null;
+        $this->i18nJoin = null;
         $this->setTablename($entity, $i18nQueryType);
 
 
