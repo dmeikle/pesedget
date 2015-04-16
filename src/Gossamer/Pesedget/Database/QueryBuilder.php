@@ -37,7 +37,8 @@ class QueryBuilder implements ManagerInterface {
     private $encodingHandler = null;
     private $queryingI18n = false;
     private $isBulkInsert = false;
-
+    private $isLikeSearch = false;
+    
     public function __construct($injectables = array()) {
         if (array_key_exists('dbConnection', $injectables)) {
             //perhaps using a project db
@@ -45,6 +46,10 @@ class QueryBuilder implements ManagerInterface {
         }
     }
 
+    public function setIsLikeSearch($isLike) {
+        $this->isLikeSearch = $isLike;
+    }
+    
     public function join(array $joins) {
         if (is_null($this->joinTables)) {
             $this->joinTables = array();
@@ -312,14 +317,17 @@ class QueryBuilder implements ManagerInterface {
         }
 
         $where = '';
-
+        
         foreach ($this->andFilter as $key => $val) {
             if (!in_array($key, $this->tableColumns)) {
                 continue;
             }
-
-            $where .= ' AND (`' . $key . '` = \'' . $val . '\'';
-
+            if($this->isLikeSearch) {
+                $where .= ' AND (`' . $key . '` like \'%' . $val . '%\'';
+            } else {
+                $where .= ' AND (`' . $key . '` = \'' . $val . '\'';
+            }
+            
 //            if(!is_null($this->encodingHandler)) {
 //                $where .= ' or `' . $key. '` = \'' . $this->encodingHandler->ascii2hex($val).'\'';
 //            }
@@ -344,11 +352,12 @@ class QueryBuilder implements ManagerInterface {
             if (!in_array($key, $this->tableColumns)) {
                 continue;
             }
-            $where .= ' OR (`' . $key . '` = \'' . ($val) . '\'';
-
-//            if(!is_null($this->encodingHandler)) {
-//                $where .= ' OR `' . $key. '` = \'' . $this->encodingHandler->ascii2hex($val).'\'';
-//            }
+            
+            if($this->isLikeSearch) {
+                $where .= ' OR (`' . $key . '` like \'%' . $val . '%\'';
+            } else {
+                $where .= ' OR (`' . $key . '` = \'' . $val . '\'';
+            }
 
             $where .= ')';
         }

@@ -90,7 +90,7 @@ class ColumnMappings
             
             if(is_null($result)) {
                 
-                throw new TableNotFoundException('table not found');
+                throw new TableNotFoundException('table ' . $tableName . ' not found');
             }
             
             $columnNames = array();

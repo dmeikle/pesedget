@@ -41,6 +41,7 @@ class DatasourceFactory {
                 $datasources[$sourceName] = $ds;
             } catch (\Exception $e) {
                 echo $e->getMessage();
+           
                 $logger->addError($sourceName . ' is not a valid datasource');
                 throw new \Exception($sourceName . ' is not a valid datasource', 580);
             }
@@ -78,11 +79,11 @@ class DatasourceFactory {
 
         $datasourceClass = $dsConfig['database'][$sourceName]['class'];
 
-        $datasource = new $datasourceClass($logger);
+        $datasource = new $datasourceClass($dsConfig['database'][$sourceName]['credentials']);
+        $datasource->setLogger($logger);
    
         unset($parser);
-        $datasource->setDatasourceKey($sourceName);
-
+        
         return $datasource;
     }
 
