@@ -328,7 +328,7 @@ class QueryBuilder implements ManagerInterface {
             $whereTable = '';
             if(in_array($key, $this->tableColumns)) {
                 $whereTable = '`' . $this->tableName . '`.';
-            }elseif(in_array($key, $this->tableI18nColumns)) {
+            }elseif(!is_null($this->tableI18nColumns) && in_array($key, $this->tableI18nColumns)) {
                 $whereTable = '`' . $this->tableName . 'I18n' . '`.';
             }
             if($this->isLikeSearch) {
@@ -364,7 +364,7 @@ class QueryBuilder implements ManagerInterface {
             $whereTable = '';
             if(in_array($key, $this->tableColumns)) {
                 $whereTable = '`' . $this->tableName . '`.';
-            }elseif(in_array($key, $this->tableI18nColumns)) {
+            }elseif(!is_null($this->tableI18nColumns) &&in_array($key, $this->tableI18nColumns)) {
                 $whereTable = '`' . $this->tableName . 'I18n' . '`.';
             }
             if($this->isLikeSearch) {
