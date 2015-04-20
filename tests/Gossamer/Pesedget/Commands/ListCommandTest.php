@@ -33,4 +33,24 @@ class ListCommandTest extends \tests\BaseTest{
         $this->assertTrue(array_key_exists('tests\\Gossamer\\Pesedget\\Entities\\Staffs', $result));
         $this->assertTrue(count($result['tests\\Gossamer\\Pesedget\\Entities\\Staffs']) > 0);
     }
+    
+    /**
+     * @group test
+     */
+    public function testAmbiguousColumns() {
+        $ticket = new \tests\Gossamer\Pesedget\Entities\Ticket();
+        $cmd = new ListCommand($ticket, null, EntityManager::getInstance()->getConnection());
+        
+        $params = array(
+            'directive::OFFSET' => '0',
+            'directive::LIMIT' => '20',
+            'locale' => 'en_US',
+            'isActive' => '1'
+        );
+       
+        $result = $cmd->execute($params);
+        $this->assertTrue(is_array($result));
+        $this->assertTrue(array_key_exists('tests\\Gossamer\\Pesedget\\Entities\\Tickets', $result));
+        $this->assertTrue(count($result['tests\\Gossamer\\Pesedget\\Entities\\Tickets']) > 0);
+    }
 }

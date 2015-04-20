@@ -35,7 +35,7 @@ class ListCommand extends AbstractCommand {
         $this->getQueryBuilder()->where($params);
         
         $query = $this->getQueryBuilder()->getQuery($this->entity, QueryBuilder::GET_ALL_ITEMS_QUERY, QueryBuilder::PARENT_AND_CHILD);
-   
+
         $result = $this->query($query);
         $param = get_class($this->entity) . 's';
              

@@ -323,9 +323,9 @@ class QueryBuilder implements ManagerInterface {
                 continue;
             }
             if($this->isLikeSearch) {
-                $where .= ' AND (`' . $key . '` like \'%' . $val . '%\'';
+                $where .= ' AND (`' . $this->tableName . '`.`' . $key . '` like \'%' . $val . '%\'';
             } else {
-                $where .= ' AND (`' . $key . '` = \'' . $val . '\'';
+                $where .= ' AND (`' . $this->tableName . '`.`' . $key . '` = \'' . $val . '\'';
             }
             
 //            if(!is_null($this->encodingHandler)) {
@@ -354,9 +354,9 @@ class QueryBuilder implements ManagerInterface {
             }
             
             if($this->isLikeSearch) {
-                $where .= ' OR (`' . $key . '` like \'%' . $val . '%\'';
+                $where .= ' OR (`' . $this->tableName . '`.`' . $key . '` like \'%' . $val . '%\'';
             } else {
-                $where .= ' OR (`' . $key . '` = \'' . $val . '\'';
+                $where .= ' OR (`' . $this->tableName . '`.`' . $key . '` = \'' . $val . '\'';
             }
 
             $where .= ')';
