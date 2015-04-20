@@ -23,7 +23,7 @@ use Gossamer\Pesedget\Database\EntityManager;
 class ListCommandTest extends \tests\BaseTest{
     
     /**
-     * 
+     * @group execute
      */
     public function testExecute() {
         $cmd = new ListCommand(new Staff(), null, EntityManager::getInstance()->getConnection());
@@ -52,5 +52,25 @@ class ListCommandTest extends \tests\BaseTest{
         $this->assertTrue(is_array($result));
         $this->assertTrue(array_key_exists('tests\\Gossamer\\Pesedget\\Entities\\Tickets', $result));
         $this->assertTrue(count($result['tests\\Gossamer\\Pesedget\\Entities\\Tickets']) > 0);
+    }
+    
+    /**
+     * @group locale
+     */
+    public function testLocaleColumns() {
+        $ticket = new \tests\Gossamer\Pesedget\Entities\TicketType();
+        $cmd = new ListCommand($ticket, null, EntityManager::getInstance()->getConnection());
+        
+        $params = array(
+            'directive::OFFSET' => '0',
+            'directive::LIMIT' => '20',
+            'locale' => 'en_US',
+            'isActive' => '1'
+        );
+       
+        $result = $cmd->execute($params);
+        $this->assertTrue(is_array($result));
+        $this->assertTrue(array_key_exists('tests\\Gossamer\\Pesedget\\Entities\\TicketTypes', $result));
+        $this->assertTrue(count($result['tests\\Gossamer\\Pesedget\\Entities\\TicketTypes']) > 0);
     }
 }

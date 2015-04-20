@@ -30,6 +30,7 @@ class QueryBuilder implements ManagerInterface {
     private $tableName = '';
     private $primaryKeys = null;
     private $tableColumns = null;
+    private $tableI18nColumns = null;
     private $i18nJoin = null;
     private $orderBy = null;
     private $dbConnection = null;
@@ -97,6 +98,7 @@ class QueryBuilder implements ManagerInterface {
             $this->fields = null;
         }
         $this->tableColumns = null;
+        $this->tableI18nColumns = null;
         $this->fieldNames = null;
         $this->i18nJoin = null;
         $this->setTablename($entity, $i18nQueryType);
@@ -158,7 +160,8 @@ class QueryBuilder implements ManagerInterface {
             //used for select statements only, but needs to join across tables
             $this->tableColumns = $columnMappings->getTableColumnList($entity->getTableName());
             //if it's an i18n select then query the locales table too
-            $this->tableColumns = array_merge($this->tableColumns, $columnMappings->getTableColumnList($entity->getI18nTablename()));
+            //array_merge($this->tableColumns, $columnMappings->getTableColumnList($entity->getI18nTablename()));
+            $this->tableI18nColumns = $columnMappings->getTableColumnList($entity->getI18nTablename());
             //set this flag so we can call it later
             $this->i18nJoin = $this->joinI18nTable($entity);
         } elseif (($entity instanceof AbstractI18nEntity) && self::CHILD_ONLY == $i18nQueryType) {
@@ -319,15 +322,19 @@ class QueryBuilder implements ManagerInterface {
         $where = '';
         
         foreach ($this->andFilter as $key => $val) {
-            if (!in_array($key, $this->tableColumns)) {
+            if (!in_array($key, $this->tableColumns) && !in_array($key, $this->tableI18nColumns)) {
                 continue;
             }
+            $whereTable = '';
+            if(in_array($key, $this->tableColumns)) {
+                $whereTable = '`' . $this->tableName . '`.';
+            }elseif(in_array($key, $this->tableI18nColumns)) {
+                $whereTable = '`' . $this->tableName . 'I18n' . '`.';
+            }
             if($this->isLikeSearch) {
-                //this needs to be more granular
-                //$where .= ' AND (`' . $this->tableName . '`.`' . $key . '` like \'%' . $val . '%\'';
-                $where .= ' AND (`' . $key . '` like \'%' . $val . '%\'';
+                $where .= ' AND (' . $whereTable . '`' . $key . '` like \'%' . $val . '%\'';
             } else {
-                $where .= ' AND (`' . $key . '` = \'' . $val . '\'';
+                $where .= ' AND (' . $whereTable . '`' . $key . '` = \'' . $val . '\'';
             }
             
 //            if(!is_null($this->encodingHandler)) {
@@ -354,13 +361,16 @@ class QueryBuilder implements ManagerInterface {
             if (!in_array($key, $this->tableColumns)) {
                 continue;
             }
-            
+            $whereTable = '';
+            if(in_array($key, $this->tableColumns)) {
+                $whereTable = '`' . $this->tableName . '`.';
+            }elseif(in_array($key, $this->tableI18nColumns)) {
+                $whereTable = '`' . $this->tableName . 'I18n' . '`.';
+            }
             if($this->isLikeSearch) {
-                //this needs to be more granular
-               // $where .= ' OR (`' . $this->tableName . '`.`' . $key . '` like \'%' . $val . '%\'';
-                 $where .= ' OR (`' . $key . '` like \'%' . $val . '%\'';
+                $where .= ' OR (' . $whereTable . '`' . $key . '` like \'%' . $val . '%\'';
             } else {
-                $where .= ' OR (`' . $key . '` = \'' . $val . '\'';
+                $where .= ' OR (' . $whereTable . '`' . $key . '` = \'' . $val . '\'';
             }
 
             $where .= ')';
