@@ -248,9 +248,9 @@ class QueryBuilder implements ManagerInterface {
         if (!is_null($this->joinTables)) {
             $select .= $this->buildJoins();
         }
+        $this->parseDirectives();
         $select .= $this->getWhereStatement();
 
-        $this->parseDirectives();
 
         $select .= $this->getOrderBy();
 
