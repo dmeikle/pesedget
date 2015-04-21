@@ -527,12 +527,16 @@ class QueryBuilder implements ManagerInterface {
 
             if ('directive::ORDER_BY' == $key) {
                 $this->setOrderBy($value);
+                unset($this->andFilter['directive::ORDER_BY']);
             }
             if ('directive::DIRECTION' == $key) {
                 $this->setDirection($value);
+                unset($this->andFilter['directive::DIRECTION']);
             }
             if ('directive::LIMIT' == $key) {
                 $this->setLimit($this->andFilter['directive::OFFSET'], $this->andFilter['directive::LIMIT']);
+                unset($this->andFilter['directive::OFFSET']);
+                unset($this->andFilter['directive::LIMIT']);
             }
         }
     }
