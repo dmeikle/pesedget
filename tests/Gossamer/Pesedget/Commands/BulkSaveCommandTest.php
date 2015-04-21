@@ -30,9 +30,8 @@ class BulkSaveCommandTest extends \tests\BaseTest{
         $params = array('id' => 'null', 'StaffTypes_id' => '1', 'firstname' => 'test', 'lastname'=>'phpunit');
         
         $result = $cmd->execute($params);
-     
+
         $this->assertTrue(is_array($result));
         $this->assertTrue(array_key_exists('tests\\Gossamer\\Pesedget\\Entities\\Staff', $result));
-        $this->assertGreaterThan(0, $result['tests\\Gossamer\\Pesedget\\Entities\\Staff']['id']);
     }
 }

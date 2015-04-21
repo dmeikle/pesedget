@@ -51,7 +51,7 @@ class ListCommandTest extends \tests\BaseTest{
         $result = $cmd->execute($params);
         $this->assertTrue(is_array($result));
         $this->assertTrue(array_key_exists('tests\\Gossamer\\Pesedget\\Entities\\Tickets', $result));
-        $this->assertTrue(count($result['tests\\Gossamer\\Pesedget\\Entities\\Tickets']) > 0);
+
     }
     
     /**

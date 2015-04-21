@@ -326,9 +326,11 @@ class QueryBuilder implements ManagerInterface {
         $where = '';
         
         foreach ($this->andFilter as $key => $val) {
-            if (!in_array($key, $this->tableColumns) && (!is_null($this->tableI18nColumns) && !in_array($key, $this->tableI18nColumns))) {
+            if ((!in_array($key, $this->tableColumns) && is_null($this->tableI18nColumns)) || (!is_null($this->tableI18nColumns) && !in_array($key, $this->tableI18nColumns))) {
                 continue;
             }
+            print_r($this->tableColumns);
+            print_r($this->tableI18nColumns);
             $whereTable = '';
             if(in_array($key, $this->tableColumns)) {
                 $whereTable = '`' . $this->tableName . '`.';
@@ -362,7 +364,7 @@ class QueryBuilder implements ManagerInterface {
 
         $where = '';
         foreach ($this->orFilter as $key => $val) {
-            if (!in_array($key, $this->tableColumns) && (!is_null($this->tableI18nColumns) && !in_array($key, $this->tableI18nColumns))) {
+            if ((!in_array($key, $this->tableColumns) && is_null($this->tableI18nColumns)) || (!is_null($this->tableI18nColumns) && !in_array($key, $this->tableI18nColumns))) {
                 continue;
             }
             $whereTable = '';

@@ -24,6 +24,18 @@ use tests\entities\Staff;
  */
 class QueryBuilderTest  extends \tests\BaseTest{
     
+    /**
+     * @group count
+     */
+    public function testCountQuery() {
+        
+        $builder = new QueryBuilder(array('dbConnection' => EntityManager::getInstance()->getConnection()));
+        $builder->where(array('directive::OFFSET' => '0', 'directive::LIMIT' => '20', 'id' => '10', 'locale' => 'en_US'));
+      
+        $query = $builder->getQuery(new Staff(), QueryBuilder::GET_COUNT_QUERY);
+        die($query);
+    }
+    
     public function testSaveValue() {
         $builder = new QueryBuilder(array('dbConnection' => EntityManager::getInstance()->getConnection()));
         
