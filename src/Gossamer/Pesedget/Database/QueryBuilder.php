@@ -216,6 +216,10 @@ class QueryBuilder implements ManagerInterface {
         if (!is_null($this->joinTables)) {
             $select .= $this->buildJoins();
         }
+        unset($this->andFilter['directive::OFFSET']);
+        unset($this->andFilter['directive::LIMIT']);
+        unset($this->andFilter['directive::DIRECTIVE']);
+        
         $select .= $this->getWhereStatement();
 
         return $select;
