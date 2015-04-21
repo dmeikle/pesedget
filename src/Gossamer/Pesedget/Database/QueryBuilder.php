@@ -329,8 +329,7 @@ class QueryBuilder implements ManagerInterface {
             if ((!in_array($key, $this->tableColumns) && is_null($this->tableI18nColumns)) || (!is_null($this->tableI18nColumns) && !in_array($key, $this->tableI18nColumns))) {
                 continue;
             }
-            print_r($this->tableColumns);
-            print_r($this->tableI18nColumns);
+          
             $whereTable = '';
             if(in_array($key, $this->tableColumns)) {
                 $whereTable = '`' . $this->tableName . '`.';
