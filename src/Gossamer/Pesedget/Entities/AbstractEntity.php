@@ -23,8 +23,13 @@ abstract class AbstractEntity
         return $this->tablename;
     }
 
+    /**
+     * returns the FIRST column as the ID column - intended to be 'id'
+     * 
+     * @return type string
+     */
     public function getIdentityColumn(){
-        return $this->primaryKeys;
+        return $this->primaryKeys[0];
     }
 
     public function getI18nIdentifier(){
