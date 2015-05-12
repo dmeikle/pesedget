@@ -103,13 +103,13 @@ class DBConnection
     }
 
     public function getConnection(){
-        if(is_null($this->conn) || !$this->conn->ping()) {
+        if(is_null($this->conn) || !$this->conn->ping()) {            
             $this->conn = mysqli_connect($this->host, $this->user, $this->pass, $this->db);
-            
-            if (!$this->conn) {
-                die('Could not connect: ' . mysql_error());
-            }
+            if(!mysqli_ping($this->conn)) {
+                throw new \Exception('unable to connect to db with provided credentials');
+            }            
         }
+        
         mysqli_query($this->conn, 'SET NAMES "utf8"');
         
         return $this->conn;

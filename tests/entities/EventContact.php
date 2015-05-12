@@ -32,7 +32,7 @@ class EventContact  extends AbstractEntity implements SQLInterface, OneToOneJoin
     }
 
     private $joinRelationships = array(
-        'tests\entities\Event' => array('EventContact.Events_id', 'Events.id')
+        'tests\entities\Event' => array('EventContacts.Events_id', 'Events.id')
     );
     
     private $joinFields = array(
