@@ -9,6 +9,8 @@ abstract class AbstractEntity
 
     protected $primaryKeys = array('id');
 
+    protected $dbName = null;
+    
     public function __construct(){	    
         $this->tablename = $this->stripNamespacing(get_class($this)) . 's';
     }
@@ -21,6 +23,14 @@ abstract class AbstractEntity
 
     public function getTableName(){
         return $this->tablename;
+    }
+    
+    public function getDBName() {
+        if(is_null($this->dbName)) {
+            return '';
+        }
+        
+        return '`' . $this->dbName . '`.';
     }
 
     /**

@@ -13,16 +13,15 @@ namespace tests\Entities;
 use Gossamer\Pesedget\Entities\AbstractEntity;
 use Gossamer\Pesedget\Database\SQLInterface;
 
-
 /**
- * TaxRate
+ * Staff
  *
  * @author Dave Meikle
  */
-class TaxRate extends AbstractEntity implements SQLInterface{
-   
+class ServerAuthenticationToken extends AbstractEntity implements SQLInterface{
+    
     public function __construct() {
         parent::__construct();
-        $this->tablename = 'CartTaxRates';
+        $this->tablename = 'phoenix_master.ServerAuthenticationTokens';
     }
 }

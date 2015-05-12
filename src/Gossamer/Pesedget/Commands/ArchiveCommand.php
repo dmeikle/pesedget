@@ -8,21 +8,14 @@
  *  For the full copyright and license information, please view the LICENSE
  *  file that was distributed with this source code.
  */
-namespace tests\Entities;
 
-use Gossamer\Pesedget\Entities\AbstractEntity;
-use Gossamer\Pesedget\Database\SQLInterface;
-
+namespace Gossamer\Pesedget\Commands;
 
 /**
- * TaxRate
+ * ArchiveCommand
  *
  * @author Dave Meikle
  */
-class TaxRate extends AbstractEntity implements SQLInterface{
-   
-    public function __construct() {
-        parent::__construct();
-        $this->tablename = 'CartTaxRates';
-    }
+class ArchiveCommand {
+    
 }

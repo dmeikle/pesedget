@@ -63,13 +63,13 @@ class QueryBuilder implements ManagerInterface {
         foreach ($this->joinTables as $objectName => $join) {
             $object = new $objectName();
 
-            $retval .= ' LEFT JOIN ' . $object->getTableName() . ' ON ' . $join[0] . ' = ' . $join[1];
+            $retval .= ' LEFT JOIN ' . $object->getDBName() . $object->getTableName() . ' ON ' . $join[0] . ' = ' . $join[1];
             if ($object instanceof AbstractI18nEntity) {
                 //add its locale values
-                $retval .= ' LEFT JOIN ' . $object->getI18nTablename() . ' ON ' . $object->getI18nTablename() .
+                $retval .= ' LEFT JOIN ' . $object->getDBName() . $object->getI18nTablename() . ' ON ' . $object->getI18nTablename() .
                         '.' . $object->getTableName() . '_id' . ' = ' . $join[1];
                 if (array_key_exists('locale', $this->andFilter)) {
-                    $retval .= ' AND ' . $object->getI18nTablename() . '.locale = \'' . $this->andFilter['locale'] . '\'';
+                    $retval .= ' AND ' . $object->getDBName() . $object->getI18nTablename() . '.locale = \'' . $this->andFilter['locale'] . '\'';
                 }
             }
         }
@@ -244,7 +244,7 @@ class QueryBuilder implements ManagerInterface {
             $select .= '*';
         }
 
-        $select .= ' FROM ' . $this->tableName;
+        $select .= ' FROM ' . $entity->getDBName() . $this->tableName;
         if (!is_null($this->i18nJoin)) {
             $select .= $this->i18nJoin;
         }
