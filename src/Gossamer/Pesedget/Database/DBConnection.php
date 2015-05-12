@@ -104,8 +104,8 @@ class DBConnection
 
     public function getConnection(){
         if(is_null($this->conn) || !$this->conn->ping()) {            
-            $this->conn = mysqli_connect($this->host, $this->user, $this->pass, $this->db);
-            if(!mysqli_ping($this->conn)) {
+            $this->conn = @mysqli_connect($this->host, $this->user, $this->pass, $this->db);
+            if(is_bool($this->conn) || !mysqli_ping($this->conn)) {
                 throw new \Exception('unable to connect to db with provided credentials');
             }            
         }
