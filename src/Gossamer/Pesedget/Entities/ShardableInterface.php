@@ -12,21 +12,12 @@
 namespace Gossamer\Pesedget\Entities;
 
 /**
- * ArchivableInterface - used by QueryBuilder to see if an entity is
- * archive capable. If it is, QueryBuilder will work with command object
- * to check automatically for the correct 'shard' of a table to query.
- * 
- * @example 
- * function getArchiveSuffix() {
- *      return "_" .
  *
- * @author Dave Meikle
+ * @author davem
  */
-class ArchivableInterface {
+interface ShardableInterface {
     
-    /**
-     * returns the suffix to append to an archived table
-     */
-    public function getArchiveSuffix();
+    public function getDbName();
     
+    public function setDbName($dbName);
 }

@@ -593,4 +593,7 @@ class QueryBuilder implements ManagerInterface {
         return '(`' . implode('`,`', $this->fields) . '`)';
     }
 
+    public function setDBConnection(DBConnection $conn) {
+        $this->dbConnection = $conn;
+    }
 }
