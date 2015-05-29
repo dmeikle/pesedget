@@ -179,7 +179,7 @@ class QueryBuilder implements ManagerInterface {
 
     private function joinI18nTable(SQLInterface $entity) {
 
-        return ' JOIN ' . $entity->getI18nTablename() . ' ON ' . $entity->getTableName() . '.id = ' . $entity->getI18nTablename() .
+        return ' JOIN ' . $entity->getDBName() . $entity->getI18nTablename() . ' ON ' . $entity->getTableName() . '.id = ' . $entity->getI18nTablename() .
                 '.' . $entity->getI18nIdentifier();
     }
 
