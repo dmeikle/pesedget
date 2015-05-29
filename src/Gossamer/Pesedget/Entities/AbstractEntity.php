@@ -25,12 +25,24 @@ abstract class AbstractEntity
         return $this->tablename;
     }
     
+    /**
+     * intended for use with ShardableInterface
+     * @return string
+     */
     public function getDBName() {
         if(is_null($this->dbName)) {
             return '';
         }
         
         return '`' . $this->dbName . '`.';
+    }
+
+    /**
+     * intended for use with ShardableInterface
+     * @param string
+     */
+    public function setDbName($dbName) {
+       $this->dbName = $dbName; 
     }
 
     /**

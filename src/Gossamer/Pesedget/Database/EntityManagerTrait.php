@@ -11,6 +11,8 @@
 
 namespace Gossamer\Pesedget\Database;
 
+use Gossamer\Pesedget\Database\EntityManager;
+
 /**
  * EntityManagerTrait
  *
@@ -24,7 +26,7 @@ trait EntityManagerTrait {
         return $this->entityManager;
     }
 
-    function setEntityManager($entityManager) {
+    function setEntityManager(EntityManager $entityManager) {
         $this->entityManager = $entityManager;
     }
 
