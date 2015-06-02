@@ -12,13 +12,11 @@
 namespace Gossamer\Pesedget\Entities;
 
 /**
- * sharding is the separation of tables across multiple databases
+ * Segmentation is deviding rows of a table into multiple tables to reduce
+ * table size - this is horizontal slicing of a vertical result set
  * 
  * @author davem
  */
-interface ShardableInterface {
-    
-    public function getDbName();
-    
-    public function setDbName($dbName);
+interface SegmentableInterface {
+    //put your code here
 }

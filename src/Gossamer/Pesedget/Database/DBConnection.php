@@ -243,4 +243,11 @@ class DBConnection
     public function getLastQuery(){
         return $this->lastQuery;
     }
+    
+    public function getCredentials() {
+        return array('username' => $this->user,
+            'password' => $this->pass,
+            'dbName' => $this->db,
+            'host' => $this->host);
+    }
 }
