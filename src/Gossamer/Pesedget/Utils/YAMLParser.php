@@ -33,7 +33,7 @@ class YAMLParser
     }
     
     public function loadConfig() {
-        return Yaml::parse($this->ymlFilePath);
+        return Yaml::parse(file_get_contents($this->ymlFilePath));
     }
     private function getSectionKey($uri) {
         
