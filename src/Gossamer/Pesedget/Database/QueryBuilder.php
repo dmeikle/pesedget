@@ -86,7 +86,7 @@ class QueryBuilder implements ManagerInterface {
             return new $className();
         }
         
-        return $this->encodingHandler->getEntity($className);
+        return $this->entityManager->getEntity($className);
     }
 
     private function setTablename(SQLInterface $entity, $i18nQueryType) {
