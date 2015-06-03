@@ -8,16 +8,15 @@
  *  For the full copyright and license information, please view the LICENSE
  *  file that was distributed with this source code.
  */
-namespace core\components\locales\entities\Locale;
+namespace components\tickets\entities;
 
 use Gossamer\Pesedget\Entities\AbstractEntity;
 use Gossamer\Pesedget\Database\SQLInterface;
-
 /**
- * Locale
+ * Staff
  *
  * @author Dave Meikle
  */
-class Locale extends AbstractEntity implements SQLInterface {
+class Ticket extends AbstractEntity implements SQLInterface {
     
 }

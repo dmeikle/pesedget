@@ -31,6 +31,13 @@ class EntityConfigurationLoaderTest extends \tests\BaseTest {
         $config = ($loader->loadConfiguration('core\components\locales\entities\Locale'));
         
         $this->assertEquals(count($config), 1);
+    }
+    
+    public function testLoadMissingConfiguration() {
+       
+        $loader = new EntityConfigurationLoader();
+        $config = ($loader->loadConfiguration('core\components\cms\entities\Locale'));
         
+        $this->assertFalse($config);
     }
 }

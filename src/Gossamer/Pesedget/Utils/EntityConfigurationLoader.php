@@ -41,6 +41,9 @@ class EntityConfigurationLoader {
     }
     
     private function checkDirectory($directory) {
+        if(!file_exists(__SITE_PATH .  $directory . DIRECTORY_SEPARATOR . $this->entityPath . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . 'entities.yml')) {
+            return false;
+        }
         $parser = new YAMLParser();
         $parser->setFilePath(__SITE_PATH .  $directory . DIRECTORY_SEPARATOR . $this->entityPath . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . 'entities.yml');
         

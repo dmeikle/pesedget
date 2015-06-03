@@ -121,8 +121,14 @@ class EntityManager {
             $entityList[$values['entityPath']] = $config;            
         }
         $entity = new $namespacedPath();
-        //ensure the key exists for this component config                                   //ensure the entity key is there also
-        if(array_key_exists($values['entityName'], $entityList[$values['entityPath']]) && array_key_exists('entity_db', $entityList[$values['entityPath']][$values['entityName']])) {
+        
+        if($entityList[$values['entityPath']] === false) {
+            return $entity;
+        }
+        //ensure the key exists for this component config                                   
+        if(array_key_exists($values['entityName'], $entityList[$values['entityPath']]) 
+                //ensure the entity key is there also
+                && array_key_exists('entity_db', $entityList[$values['entityPath']][$values['entityName']])) {
             $entity->setDbName($entityList[$values['entityPath']][$values['entityName']]['entity_db']);
         }  
         

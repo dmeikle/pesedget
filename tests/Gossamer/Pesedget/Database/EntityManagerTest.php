@@ -52,4 +52,10 @@ class EntityManagerTest extends \tests\BaseTest{
         $entity = $manager->getEntity('components\staff\entities\Staff');
      print_r($entity);   
     }
+    public function testGetEntityNoConfig() {
+        $manager = EntityManager::getInstance();       
+        
+        $entity = $manager->getEntity('components\tickets\entities\Ticket');
+     print_r($entity);   
+    }
 }
