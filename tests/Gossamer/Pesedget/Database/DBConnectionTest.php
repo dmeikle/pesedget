@@ -25,7 +25,6 @@ class DBConnectionTest extends \tests\BaseTest{
         
         $result = $conn->query("select * from Staff limit 10");
         
-        print_r($result);
     }
     
    
@@ -36,8 +35,5 @@ class DBConnectionTest extends \tests\BaseTest{
         $conn = new DBConnection();
         
         $result = $conn->preparedQuery('select * from Staff where id = ?', array('i', '2'));
-        echo "num rows: ".$conn->getRowCount()."\r\n";
-        echo "this is result:\r\n";
-        print_r($result);
     }
 }

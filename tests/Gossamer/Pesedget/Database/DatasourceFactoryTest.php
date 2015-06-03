@@ -16,7 +16,7 @@ class DatasourceFactoryTest extends \tests\BaseTest{
         
         $ds = $factory->getDatasource('mysql', $this->getLogger());
         
-        print_r($ds);
+        //print_r($ds);
        
     }
     

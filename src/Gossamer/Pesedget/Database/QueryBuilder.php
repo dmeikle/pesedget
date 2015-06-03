@@ -10,6 +10,8 @@ use Gossamer\Pesedget\Database\ColumnMappings;
 
 class QueryBuilder implements ManagerInterface {
 
+    use \Gossamer\Pesedget\Database\EntityManagerTrait;
+    
     const SAVE_QUERY = 'save';
     const DELETE_QUERY = 'delete';
     const GET_ITEM_QUERY = 'get';
@@ -19,6 +21,7 @@ class QueryBuilder implements ManagerInterface {
     const CHILD_ONLY = 'childOnly';
     const PARENT_AND_CHILD = 'parentAndChild';
 
+    
     private $fields = null; //derived from passed in array
     private $fieldNames = array(); //derived from values
     private $values = null;
@@ -61,7 +64,8 @@ class QueryBuilder implements ManagerInterface {
     private function buildJoins() {
         $retval = '';
         foreach ($this->joinTables as $objectName => $join) {
-            $object = new $objectName();
+            
+            $object = $this->buildEntity($objectName);
 
             $retval .= ' LEFT JOIN ' . $object->getDBName() . $object->getTableName() . ' ON ' . $join[0] . ' = ' . $join[1];
             if ($object instanceof AbstractI18nEntity) {
@@ -75,6 +79,14 @@ class QueryBuilder implements ManagerInterface {
         }
 
         return $retval;
+    }
+    
+    private function buildEntity($className) {
+        if(is_null($this->entityManager)) {
+            return new $className();
+        }
+        
+        return $this->encodingHandler->getEntity($className);
     }
 
     private function setTablename(SQLInterface $entity, $i18nQueryType) {
@@ -129,7 +141,7 @@ class QueryBuilder implements ManagerInterface {
         } elseif ($queryType == self::GET_ALL_ITEMS_QUERY) {
             $query = $this->buildSelectStatement(false, $entity, $queryType);
         } elseif ($queryType == self::GET_COUNT_QUERY) {
-            $query = $this->buildCountStatement();
+            $query = $this->buildCountStatement($entity);
         }
 
         return $query; // preg_replace('/[\x00-\x1F\x80-\xFF]/', '', $query);
@@ -204,11 +216,11 @@ class QueryBuilder implements ManagerInterface {
         $this->fields = $fields;
     }
 
-    private function buildCountStatement() {
-        $select = 'SELECT COUNT(' . $this->tableName . '.id) as rowCount ';
+    private function buildCountStatement(SQLInterface $entity) {
+        $select = 'SELECT COUNT(' . $entity->getDbName() . $this->tableName . '.id) as rowCount ';
 
 
-        $select .= ' FROM ' . $this->tableName;
+        $select .= ' FROM ' .  $this->tableName;
         if (!is_null($this->i18nJoin)) {
             $select .= $this->i18nJoin;
         }
@@ -227,24 +239,23 @@ class QueryBuilder implements ManagerInterface {
 
     private function buildSelectStatement($firstRowOnly = false, SQLInterface $entity, $queryType) {
         $select = 'SELECT ';
-//        if(!$firstRowOnly) {
-//            $select .= 'SQL_CALC_FOUND_ROWS ';
-//        }
-     
+
+        
         if (!is_null($this->fields)) {
             $select .= implode(',', $this->fields);
         }elseif (in_array('id', $this->tableColumns)) {
-            $select .= '*, ' . $this->tableName . '.id as ' . $this->tableName . '_id';
+            $select .= '*, ' . $entity->getDBName() . $this->tableName . '.id as ' . $this->tableName . '_id';
         }elseif($queryType == self::CHILD_ONLY) {
             $select .= '*'; //this is because there's no guarantee we have an id column on child only queries
         } elseif (!$this->queryingI18n && substr($this->tableName, -4) != 'I18n' && in_array($this->tableName . '_id', $this->tableColumns)) {
-            $select .= '*, ' . $this->tableName . '.id as ' . $this->tableName . '_id';
+            $select .= '*, ' . $entity->getDBName() . $this->tableName . '.id as ' . $this->tableName . '_id';
         } else {
             //don't build a custom column since the 'id' column does not exist in i18n tables
             $select .= '*';
         }
 
         $select .= ' FROM ' . $entity->getDBName() . $this->tableName;
+        
         if (!is_null($this->i18nJoin)) {
             $select .= $this->i18nJoin;
         }

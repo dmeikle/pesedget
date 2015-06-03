@@ -22,6 +22,9 @@ class ServerAuthenticationToken extends AbstractEntity implements SQLInterface{
     
     public function __construct() {
         parent::__construct();
-        $this->tablename = 'phoenix_master.ServerAuthenticationTokens';
+       // $this->tablename = 'phoenix_master.ServerAuthenticationTokens';
+        $this->dbName = 'phoenix_master';
     }
+    
+    
 }

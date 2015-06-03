@@ -30,7 +30,6 @@ class QueryBuilderLinkedDatabaseTest  extends \tests\BaseTest{
         $builder = new QueryBuilder(array('dbConnection' => EntityManager::getInstance()->getConnection()));
         $query = $builder->getQuery(new ServerAuthenticationToken(), QueryBuilder::GET_ITEM_QUERY);
         
-        echo $query."\r\n";
     }
     
     public function testJoinedQuery() {
@@ -55,7 +54,6 @@ class QueryBuilderLinkedDatabaseTest  extends \tests\BaseTest{
                 }
                 $query = $builder->getQuery($object, QueryBuilder::GET_ITEM_QUERY, QueryBuilder::CHILD_ONLY, null, null, FALSE);
 
-                echo $query."\r\n";
 
             
         }
