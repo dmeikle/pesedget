@@ -20,6 +20,8 @@ class EntityManager {
     
     private $config;
     
+    private $entityList = null;
+    
     //to make sure it's not instantiated
     protected function __construct() {
         
@@ -104,5 +106,54 @@ class EntityManager {
     
     public function getKeys() {
         return array_keys($this->connections);
+    }
+    
+    public function getEntity($namespacedPath) {
+        $entityList = $this->getEntityList();
+        //get entityName and entityPath
+        $values = $this->getEntityValues($namespacedPath);
+        
+        if(!array_key_exists($values['entityPath'], $entityList)) {
+            
+            //load the config for this component
+            $config = $this->loadEntityConfig($namespacedPath);
+            
+            $entityList[$values['entityPath']] = $config;            
+        }
+        $entity = new $namespacedPath();
+        //ensure the key exists for this component config                                   //ensure the entity key is there also
+        if(array_key_exists($values['entityName'], $entityList[$values['entityPath']]) && array_key_exists('entity_db', $entityList[$values['entityPath']][$values['entityName']])) {
+            $entity->setDbName($entityList[$values['entityPath']][$values['entityName']]['entity_db']);
+        }  
+        
+        return $entity;
+    }
+    
+    
+    private function getEntityValues($namespacedPath) {
+        $tmp = explode('\\', $namespacedPath);
+        $retval = array();
+        $retval['entityName'] = array_pop($tmp);
+        
+        //drop the entities folder
+        array_pop($tmp);
+        
+        $retval['entityPath'] = implode(DIRECTORY_SEPARATOR, $tmp);
+        
+        return $retval;
+    }
+    
+    private function loadEntityConfig($namespacedPath) {
+        $loader = new \Gossamer\Pesedget\Utils\EntityConfigurationLoader();
+        
+        return $loader->loadConfiguration($namespacedPath);
+    }
+    
+    private function getEntityList() {
+        if(is_null($this->entityList)) {
+            $this->entityList = array();
+        }
+        
+        return $this->entityList;
     }
 }

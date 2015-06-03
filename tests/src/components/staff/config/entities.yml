@@ -1,0 +1,7 @@
+## YAML Template.
+---
+Staff:
+    entity_db: vancouver
+    
+StaffAuthorization:
+    entity_db: vancouver

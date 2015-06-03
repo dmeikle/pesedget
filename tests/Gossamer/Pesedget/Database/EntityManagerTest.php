@@ -45,4 +45,11 @@ class EntityManagerTest extends \tests\BaseTest{
         $this->assertTrue(array_key_exists('host', $credentials));
         $this->assertEquals('localhost', $credentials['host']);
     }
+    
+    public function testGetEntity() {
+        $manager = EntityManager::getInstance();       
+        
+        $entity = $manager->getEntity('components\staff\entities\Staff');
+     print_r($entity);   
+    }
 }
