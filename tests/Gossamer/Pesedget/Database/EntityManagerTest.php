@@ -50,12 +50,12 @@ class EntityManagerTest extends \tests\BaseTest{
         $manager = EntityManager::getInstance();       
         
         $entity = $manager->getEntity('components\staff\entities\Staff');
-     print_r($entity);   
+        $this->assertTrue($entity instanceof \components\staff\entities\Staff);
     }
     public function testGetEntityNoConfig() {
         $manager = EntityManager::getInstance();       
         
         $entity = $manager->getEntity('components\tickets\entities\Ticket');
-     print_r($entity);   
+        $this->assertTrue($entity instanceof \components\tickets\entities\Ticket);
     }
 }
