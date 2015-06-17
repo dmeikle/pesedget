@@ -35,7 +35,14 @@ class QueryBuilderTest  extends \tests\BaseTest{
         $query = $builder->getQuery(new Staff(), QueryBuilder::GET_COUNT_QUERY);
        
     }
-    
+    public function testNullParamQuery() {
+        
+        $builder = new QueryBuilder(array('dbConnection' => EntityManager::getInstance()->getConnection()));
+        $builder->where(array('directive::OFFSET' => '0', 'directive::LIMIT' => '20', 'id' => 'null', 'locale' => 'en_US'));
+      
+        $query = $builder->getQuery(new Staff(), QueryBuilder::GET_COUNT_QUERY);
+       echo $query;
+    }
     public function testSaveValue() {
         $builder = new QueryBuilder(array('dbConnection' => EntityManager::getInstance()->getConnection()));
         

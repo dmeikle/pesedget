@@ -352,7 +352,11 @@ class QueryBuilder implements ManagerInterface {
             if($this->isLikeSearch) {
                 $where .= ' AND (' . $whereTable . '`' . $key . '` like \'%' . $val . '%\'';
             } else {
-                $where .= ' AND (' . $whereTable . '`' . $key . '` = \'' . $val . '\'';
+                if($val == 'null') {
+                    $where .= ' AND ( IFNULL(' . $whereTable . '`' . $key . '`, 0) = 0';
+                } else {
+                    $where .= ' AND (' . $whereTable . '`' . $key . '` = \'' . $val . '\'';
+                }
             }
             
 //            if(!is_null($this->encodingHandler)) {
