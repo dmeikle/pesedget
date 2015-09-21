@@ -338,7 +338,7 @@ class QueryBuilder implements ManagerInterface {
         
         foreach ($this->andFilter as $key => $val) {
          
-            if (!$this->checkColumnExists($key)) {
+            if (!$this->checkColumnExists($key) || strpos($key, 'directive::') !== false) {
                 
                 continue;
             }
