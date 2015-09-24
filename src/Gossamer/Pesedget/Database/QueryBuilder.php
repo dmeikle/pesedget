@@ -36,6 +36,7 @@ class QueryBuilder implements ManagerInterface {
     private $tableI18nColumns = null;
     private $i18nJoin = null;
     private $orderBy = null;
+    private $groupBy = null;
     private $dbConnection = null;
     private $joinTables = null;
     private $encodingHandler = null;
@@ -230,7 +231,7 @@ class QueryBuilder implements ManagerInterface {
         }
         unset($this->andFilter['directive::OFFSET']);
         unset($this->andFilter['directive::LIMIT']);
-        unset($this->andFilter['directive::DIRECTIVE']);
+        unset($this->andFilter['directive::DIRECTION']);
         
         $select .= $this->getWhereStatement();
 
@@ -267,11 +268,18 @@ class QueryBuilder implements ManagerInterface {
         $select .= $this->getWhereStatement();
 
 
+        $select .= $this->getGroupBy();
         $select .= $this->getOrderBy();
 
         $select .= $this->getOffset($firstRowOnly);
 
         return $select;
+    }
+
+    private function getGroupBy() {
+        if (!is_null($this->groupBy)) {
+            return $this->groupBy;
+        }
     }
 
     private function getOrderBy() {
@@ -551,10 +559,21 @@ class QueryBuilder implements ManagerInterface {
         if(is_null($this->andFilter)) {
             return;
         }
+        
+        //group by is important to get before order by so lets deal with it first
+        if(array_key_exists('directive::GROUP_BY', $this->andFilter)) {
+            
+        }
+        
         foreach ($this->andFilter as $key => $value) {
 
             if (strpos($key, 'directive::') === FALSE) {
                 continue;
+            }
+
+            if ('directive::GROUP_BY' == $key) {
+                $this->setGroupBy($this->andFilter['directive::GROUP_BY']);
+                unset($this->andFilter['directive::GROUP_BY']);
             }
 
             if ('directive::ORDER_BY' == $key) {
@@ -574,7 +593,15 @@ class QueryBuilder implements ManagerInterface {
     }
 
     private function setOrderBy($columnAndDirection) {
-        $this->orderBy = ' order by ' . $columnAndDirection;
+        if(strlen($this->orderBy) == 0) {
+            $this->orderBy = ' ORDER BY ' . $columnAndDirection;
+        } else {
+            $this->orderBy .= ', ' . $columnAndDirection;
+        }         
+    }
+    
+    private function setGroupBy($column) {
+        $this->groupBy = ' GROUP BY ' . $column;
     }
 
     private function setDirection($direction) {

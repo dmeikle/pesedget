@@ -22,7 +22,25 @@ use tests\entities\Staff;
  *
  * @author Dave Meikle
  */
-class QueryBuilderTest  extends \tests\BaseTest{
+class QueryBuilderTest  extends \tests\BaseTest {
+    
+    /**
+     * @group groupby
+     */
+    public function testGroupBy() {
+        $builder = new QueryBuilder(array('dbConnection' => EntityManager::getInstance()->getConnection()));
+        $builder->where(array('directive::OFFSET' => '0', 
+            'directive::LIMIT' => '20', 
+            'id' => '10', 
+            'locale' => 'en_US',
+            'directive::ORDER_BY' => 'firstname',
+            'directive::GROUP_BY' => 'lastname'
+            ));
+      
+        $query = $builder->getQuery(new Staff(), QueryBuilder::GET_ALL_ITEMS_QUERY);
+        echo $query;
+        
+    }
     
     /**
      * @group count
@@ -41,8 +59,19 @@ class QueryBuilderTest  extends \tests\BaseTest{
         $builder->where(array('directive::OFFSET' => '0', 'directive::LIMIT' => '20', 'id' => 'null', 'locale' => 'en_US'));
       
         $query = $builder->getQuery(new Staff(), QueryBuilder::GET_COUNT_QUERY);
-    
+        
     }
+    
+    public function testDirectives() {
+        
+        $builder = new QueryBuilder(array('dbConnection' => EntityManager::getInstance()->getConnection()));
+        $builder->where(array('directive::OFFSET' => '0', 'directive::LIMIT' => '20', 'id' => 'null', 'locale' => 'en_US', 'directive::ORDER_BY' => 'firstname', 'directive::DIRECTION' => 'asc'));
+      
+        $query = $builder->getQuery(new Staff(), QueryBuilder::GET_ALL_ITEMS_QUERY);
+        echo "how's this:\r\n";
+        echo $query;
+    }
+
     public function testSaveValue() {
         $builder = new QueryBuilder(array('dbConnection' => EntityManager::getInstance()->getConnection()));
         
