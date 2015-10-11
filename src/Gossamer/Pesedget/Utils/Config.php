@@ -16,6 +16,7 @@ class Config
     }
     
     public function get($item){
+        
         if(array_key_exists($item, $this->configuration)){
             return $this->configuration[$item];
         }
@@ -28,7 +29,7 @@ class Config
     }
     
     public function toArray(){
-        return $this->configuration;
+        return array_keys($this->configuration);
     }
 }
 

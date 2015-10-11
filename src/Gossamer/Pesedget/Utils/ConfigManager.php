@@ -5,6 +5,7 @@ namespace Gossamer\Pesedget\Utils;
 
 use Gossamer\Pesedget\Utils\ManagerInterface;
 use Gossamer\Pesedget\Utils\Config;
+use Gossamer\Caching\CacheManager;
 
 /**
  * ConfigManager Class
@@ -92,8 +93,11 @@ class ConfigManager implements ManagerInterface
      */
     public function getConfiguration($filename)
     {
+        $cacheManager = new CacheManager();
+        echo __CACHE_DIRECTORY . $filename."\r\n";
         if (file_exists($filename)) {
-            $config = new Config(json_decode(file_get_contents($filename)));
+            $config = new Config($cacheManager->retrieveFromCache('/' . $filename));
+            //$config = new Config(json_decode(file_get_contents($filename)));
 
             return $config;
         }
@@ -110,12 +114,11 @@ class ConfigManager implements ManagerInterface
     public function saveConfiguration($filename, Config $config)
     {
         $this->workingPath = $this->parseFilepath($filename);
-
-        if (!$config instanceof Config) {
-            throw new \RuntimeException('Not an instance of Config');
-        }
-
-        $this->filePutContentsAtomic($filename, json_encode($config->toArray()));
+        
+        $cacheManager = new CacheManager();
+        $cacheManager->saveToCache('/' . $filename, $config->toArray());
+        
+       // $this->filePutContentsAtomic($filename, json_encode($config->toArray()));
     }
 
 }
