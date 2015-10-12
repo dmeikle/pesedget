@@ -62,6 +62,9 @@ class QueryBuilderTest  extends \tests\BaseTest {
         
     }
     
+    /**
+     * @group directive
+     */
     public function testDirectives() {
         
         $builder = new QueryBuilder(array('dbConnection' => EntityManager::getInstance()->getConnection()));

@@ -31,5 +31,9 @@ class Config
     public function toArray(){
         return array_keys($this->configuration);
     }
+    
+    public function toDetailsArray() {
+        return $this->configuration;
+    }
 }
 

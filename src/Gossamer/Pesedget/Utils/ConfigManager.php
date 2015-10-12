@@ -57,7 +57,7 @@ class ConfigManager implements ManagerInterface
      *
      * @param string    filename
      * @param string    content
-     */
+   
     private function filePutContentsAtomic($filename, $content)
     {
  
@@ -84,7 +84,7 @@ class ConfigManager implements ManagerInterface
         return true;
 
     }
-
+  */
     /**
      * getConfiguration - loads the configuration
      *
@@ -94,15 +94,12 @@ class ConfigManager implements ManagerInterface
     public function getConfiguration($filename)
     {
         $cacheManager = new CacheManager();
-        echo __CACHE_DIRECTORY . $filename."\r\n";
-        if (file_exists($filename)) {
-            $config = new Config($cacheManager->retrieveFromCache('/' . $filename));
-            //$config = new Config(json_decode(file_get_contents($filename)));
+        
+       
+        $config = new Config($cacheManager->retrieveFromCache('/' . $filename));
 
-            return $config;
-        }
-
-        return null;
+        return is_array($config)? $config : null;
+       
     }
 
     /**
