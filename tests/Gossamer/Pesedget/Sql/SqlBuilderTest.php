@@ -15,6 +15,8 @@ use Gossamer\Pesedget\Sql\Expressions\Select;
 use Gossamer\Pesedget\Sql\Expressions\From;
 use Gossamer\Pesedget\Sql\Expressions\Where;
 use Gossamer\Pesedget\Sql\Expressions\OrderBy;
+use Gossamer\Pesedget\Sql\Expressions\LeftJoin;
+use Gossamer\Pesedget\Sql\Expressions\JoinParam;
 
 /**
  * SqlBuilder
@@ -30,6 +32,18 @@ class SqlBuilderTest extends \tests\BaseTest {
                 ->add('where', new Where('id', '=', '?1'))
                 ->add('orderBy', new OrderBy('lastname, firstname', 'ASC'));
         
-        echo $builder->toSql();
+        echo $builder->toSql() ."\r\n";
+    }
+    
+    public function testJoinSelect() {
+        $builder = new SqlBuilder();
+        $builder->add('select', new Select(array('firstname', 'lastname')))
+                ->add('from', new From('Staff', 's'))
+                ->add('leftJoin', new LeftJoin('StaffAuthorizations', 'sa'))
+                ->add('joinParam1', new JoinParam(array('sa.Staff_id = s.id', 'sa.id > 1')))
+                ->add('where', new Where('id', '=', '?1'))
+                ->add('orderBy', new OrderBy('lastname, firstname', 'ASC'));
+        
+        echo $builder->toSql() ."\r\n";
     }
 }

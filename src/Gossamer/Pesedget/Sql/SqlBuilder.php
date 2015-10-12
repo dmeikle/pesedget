@@ -18,7 +18,11 @@ namespace Gossamer\Pesedget\Sql;
  */
 class SqlBuilder {
     
+     
+    
     private $statement = array();
+    
+    private $params = array();
     
     public function add($sqlPartial, SqlStatement $statement) {
         $this->statement[$sqlPartial] = $statement;
@@ -27,6 +31,10 @@ class SqlBuilder {
     }
     
     public function toSql() {
-        return implode(' ', $this->statement);
+        $sql = implode(' ', $this->statement);
+        
+        return $sql;
     }
+    
+    
 }
