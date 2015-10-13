@@ -29,7 +29,7 @@ class Config
     }
     
     public function toArray(){
-        return array_keys($this->configuration);
+        return array_values($this->configuration);
     }
     
     public function toDetailsArray() {
