@@ -25,7 +25,10 @@ class GroupBy extends SqlDecorator {
     }
 
     public function __toString() {
-        return ' GROU BY ' . $this->sqlStatement;
+        if(strlen(str_replace(' ', '', $this->sqlStatement)) == 0) {
+            return '';
+        }
+        return ' GROUP BY ' . $this->sqlStatement;
     }
 
 }

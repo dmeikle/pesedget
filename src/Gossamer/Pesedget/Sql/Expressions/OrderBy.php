@@ -25,6 +25,10 @@ class OrderBy extends SqlDecorator {
     }
     
     public function __toString() {
+        if(strlen(str_replace(' ', '', $this->sqlStatement)) == 0) {
+            return '';
+        }
+        
         return 'ORDER BY ' . $this->sqlStatement;
     }
 
