@@ -488,8 +488,7 @@ class QueryBuilder implements ManagerInterface {
     private function parseValuesToInsert() {
         $values = '';
         $modifiedColumn = false;
-        print_r($this->tableColumns);
-
+       
         if (is_array(current($this->values)) && $this->isBulkInsert) {
             return $this->parseArray();
         }

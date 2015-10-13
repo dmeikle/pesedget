@@ -92,13 +92,13 @@ class ColumnMappings
                 
                 throw new TableNotFoundException('table ' . $tableName . ' not found');
             }
-          print_r($result);
+        
             $columnNames = array();
             foreach($result as $object => $values) {
                 //array_push($columnNames, array($values['Field'] => $values));
                 $columnNames[$values['Field']] = $values;
             }
-            print_r($columnNames);
+          
 //            
 //            foreach($result as $object => $values){
 //                foreach($values as $column => $val){
@@ -113,7 +113,7 @@ class ColumnMappings
 
            $configManager->saveConfiguration($filename, $config);
         }
-print_r($config);
+
         return $config->toArray();
 
     }
