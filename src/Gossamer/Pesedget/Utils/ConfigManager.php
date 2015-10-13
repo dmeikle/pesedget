@@ -94,11 +94,13 @@ class ConfigManager implements ManagerInterface
     public function getConfiguration($filename)
     {
         $cacheManager = new CacheManager();
-        
-       
-        $config = new Config($cacheManager->retrieveFromCache('/' . $filename));
+        $configuration = $cacheManager->retrieveFromCache('/' . $filename);
+        if(!is_array($configuration)) {
+            return null;
+        }
+        $config = new Config($configuration);
 
-        return is_array($config)? $config : null;
+        return $config;
        
     }
 
