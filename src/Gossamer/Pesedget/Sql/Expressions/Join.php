@@ -20,8 +20,14 @@ use Gossamer\Pesedget\Sql\SqlDecorator;
  * @author Dave Meikle
  */
 class Join extends SqlDecorator {
-    public function __toString() {
-        
+      
+    public function __construct($tableName, $alias = null) {
+        parent::set("$tableName $alias");
     }
+
+    public function __toString() {
+        return 'JOIN ' . $this->sqlStatement;
+    }
+
 
 }
