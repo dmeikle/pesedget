@@ -20,12 +20,12 @@ use Gossamer\Pesedget\Sql\SqlDecorator;
  */
 class Where extends SqlDecorator {
     
-    public function __construct($column, $comparator, $value) {
-        parent::set(" $column $comparator $value");
+    public function __construct(array $filters) {
+        parent::set($filters);
     }
     
     public function __toString() {
-        return ' WHERE ' .$this->sqlStatement;
+        return ' WHERE (' . implode(') AND (', $this->sqlStatement) . ')';
     }
 
 }
