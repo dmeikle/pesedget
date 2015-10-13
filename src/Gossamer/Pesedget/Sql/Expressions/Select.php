@@ -26,6 +26,6 @@ class Select extends SqlDecorator {
 
 
     public function __toString() {
-        return 'SELECT (' . implode(',', $this->sqlStatement) . ')';
+        return 'SELECT ' . implode(',', $this->sqlStatement);
     }
 }
