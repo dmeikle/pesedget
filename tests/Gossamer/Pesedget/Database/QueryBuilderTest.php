@@ -25,7 +25,7 @@ use tests\entities\Staff;
 class QueryBuilderTest  extends \tests\BaseTest {
     
     /**
-     * @group groupby
+     * @group locale 
      */
     public function testGroupBy() {
         $builder = new QueryBuilder(array('dbConnection' => EntityManager::getInstance()->getConnection()));
@@ -34,7 +34,8 @@ class QueryBuilderTest  extends \tests\BaseTest {
             'id' => '10', 
             'locale' => 'en_US',
             'directive::ORDER_BY' => 'firstname',
-            'directive::GROUP_BY' => 'lastname'
+            'directive::GROUP_BY' => 'lastname',
+            'locale' => 'en_US'
             ));
       
         $query = $builder->getQuery(new Staff(), QueryBuilder::GET_ALL_ITEMS_QUERY);

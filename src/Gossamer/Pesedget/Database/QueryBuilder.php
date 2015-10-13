@@ -378,15 +378,17 @@ class QueryBuilder implements ManagerInterface {
     }
 
     private function checkColumnExists($column) {
+       
         if(in_array($column, $this->tableColumns)) {
             return true;
         }
         if(!is_null($this->tableI18nColumns) && in_array($column, $this->tableI18nColumns)) {
             return true;
         }
-        
+    
         return false;
     }
+    
     private function buildOrWhereFilter() {
         if (is_null($this->orFilter) || count($this->orFilter) == 0) {
             return '';
