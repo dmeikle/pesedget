@@ -13,6 +13,7 @@ class Config
     
     public function __construct($configuration = array()){
         $this->configuration = $configuration;
+        
     }
     
     public function get($item){
@@ -29,7 +30,8 @@ class Config
     }
     
     public function toArray(){
-        return array_values($this->configuration);
+        
+        return array_values(array_keys($this->configuration));
     }
     
     public function toDetailsArray() {

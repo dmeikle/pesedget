@@ -51,40 +51,7 @@ class ConfigManager implements ManagerInterface
  
         return implode('/', $retval);
     }
-
-    /**
-     * filePutContentsAtomic - writes file while avoiding write collisions
-     *
-     * @param string    filename
-     * @param string    content
-   
-    private function filePutContentsAtomic($filename, $content)
-    {
- 
-        $temp = tempnam($this->workingPath, 'temp');
-
-        if (!($f = @fopen($temp, 'wb'))) {
-            $temp = $this->workingPath . DIRECTORY_SEPARATOR . uniqid('temp');
-            if (!($f = @fopen($temp, 'wb'))) {
-                trigger_error("filePutContentsAtomic() : error writing temporary file '$temp'", E_USER_WARNING);
-                return false;
-            }
-        }
-
-        fwrite($f, $content);
-        fclose($f);
-
-        if (!@rename($temp, $filename)) {
-            @unlink($filename);
-            @rename($temp, $filename);
-        }
-
-        @chmod($filename, self::FILE_PUT_CONTENTS_ATOMIC_MODE);
-
-        return true;
-
-    }
-  */
+    
     /**
      * getConfiguration - loads the configuration
      *
@@ -93,6 +60,7 @@ class ConfigManager implements ManagerInterface
      */
     public function getConfiguration($filename)
     {
+        
         $cacheManager = new CacheManager();
         $configuration = $cacheManager->retrieveFromCache('/' . $filename);
         if(!is_array($configuration)) {
@@ -113,11 +81,10 @@ class ConfigManager implements ManagerInterface
     public function saveConfiguration($filename, Config $config)
     {
         $this->workingPath = $this->parseFilepath($filename);
-        
+            
         $cacheManager = new CacheManager();
-        $cacheManager->saveToCache('/' . $filename, $config->toArray());
+        $cacheManager->saveToCache('/' . $filename, $config->toDetailsArray());
         
-       // $this->filePutContentsAtomic($filename, json_encode($config->toArray()));
     }
 
 }
