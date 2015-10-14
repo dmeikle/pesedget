@@ -28,7 +28,7 @@ class Limit extends SqlDecorator {
         if(strlen(str_replace(' ','',$this->sqlStatement)) == 1) {
             return '';
         }
-        return ' LIIMIT ' . $this->sqlStatement;
+        return ' LIMIT ' . $this->sqlStatement;
     }
 
 }
