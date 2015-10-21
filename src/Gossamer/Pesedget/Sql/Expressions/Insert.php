@@ -14,21 +14,18 @@ namespace Gossamer\Pesedget\Sql\Expressions;
 use Gossamer\Pesedget\Sql\SqlDecorator;
 
 /**
- * GroupBy
+ * From
  *
  * @author Dave Meikle
  */
-class GroupBy extends SqlDecorator {
+class From extends SqlDecorator {
     
-     public function __construct($column, $direction = 'ASC') {
-        parent::set("$column $direction");
+    public function __construct($tableName, $alias = null) {
+        parent::set("$tableName $alias");
     }
 
     public function __toString() {
-        if(strlen(str_replace(' ', '', $this->sqlStatement)) == 0) {
-            return '';
-        }
-        return ' GROUP BY ' . $this->sqlStatement;
+        return 'FROM ' . $this->sqlStatement;
     }
 
 }
