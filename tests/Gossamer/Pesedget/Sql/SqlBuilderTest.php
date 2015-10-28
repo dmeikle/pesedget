@@ -40,7 +40,9 @@ class SqlBuilderTest extends \tests\BaseTest {
         $builder->add('select', new Select(array('firstname', 'lastname')))
                 ->add('from', new From('Staff', 's'))
                 ->add('leftJoin', new LeftJoin('StaffAuthorizations', 'sa'))
-                ->add('joinParam1', new JoinParam(array('sa.Staff_id = s.id', 'sa.id > 1')))
+                ->add('joinParam', new JoinParam(array('sa.Staff_id = s.id', 'sa.id > 1')))
+                ->add('leftJoin', new LeftJoin('ProjectManagers', 'pm'))
+                ->add('joinParam', new JoinParam(array('pm.Staff_id = s.id')))
                 ->add('where', new Where('id', '=', '?1'))
                 ->add('orderBy', new OrderBy('lastname, firstname', 'ASC'));
         

@@ -12,7 +12,7 @@
 namespace Gossamer\Pesedget\Sql;
 
 /**
- * SqlBuilder
+ * SqlDecorator
  *
  * @author Dave Meikle
  */

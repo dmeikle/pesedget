@@ -25,7 +25,7 @@ class SqlBuilder {
     private $params = array();
     
     public function add($sqlPartial, SqlStatement $statement) {
-        $this->statement[$sqlPartial] = $statement;
+        $this->statement[] = $statement;
         
         return $this;
     }
