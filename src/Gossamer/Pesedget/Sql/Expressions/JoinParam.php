@@ -25,10 +25,14 @@ class JoinParam extends SqlDecorator {
     }
     
     public function __toString() {
-        $retval = implode(') AND (', $this->sqlStatement);
+        $retval = '';
+        foreach($this->sqlStatement as $key => $value) {
+            $retval .= ' AND (' . $key . ' = ' . $value . ')';
+        }
         
         
-        return ' ON (' . $retval . ')';
+        
+        return ' ON ' . substr($retval, 4) ;
     }
     
 }

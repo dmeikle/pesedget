@@ -78,9 +78,7 @@ class ColumnMappings
      *
      */
     private function getColumnMappingsFromConfig($tableName){
- 
-        //$filename = realpath('/tmp/'.__SITE_NAME .'/config') . DIRECTORY_SEPARATOR . "$tableName.conf";
-	//$filename = __CACHE_DIRECTORY . "$tableName.conf";
+
         $filename =  "$tableName.conf";
         $configManager = new ConfigManager();
 	$config = $configManager->getConfiguration($filename);
@@ -92,28 +90,18 @@ class ColumnMappings
                 
                 throw new TableNotFoundException('table ' . $tableName . ' not found');
             }
-          print_r($result);
+        
             $columnNames = array();
             foreach($result as $object => $values) {
                 //array_push($columnNames, array($values['Field'] => $values));
                 $columnNames[$values['Field']] = $values;
             }
-            print_r($columnNames);
-//            
-//            foreach($result as $object => $values){
-//                foreach($values as $column => $val){
-//                    if($column == 'Field' && !in_array($val, $columnNames)){
-//                        array_push($columnNames, $val);
-//                    }
-//                }
-//            }
 
-           $config = new Config($columnNames);
+           $config = new Config($columnNames);           
            
-
            $configManager->saveConfiguration($filename, $config);
         }
-print_r($config);
+
         return $config->toArray();
 
     }

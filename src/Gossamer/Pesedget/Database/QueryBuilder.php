@@ -11,7 +11,7 @@ use Gossamer\Pesedget\Database\ColumnMappings;
 class QueryBuilder implements ManagerInterface {
 
     use \Gossamer\Pesedget\Database\EntityManagerTrait;
-    
+
     const SAVE_QUERY = 'save';
     const DELETE_QUERY = 'delete';
     const GET_ITEM_QUERY = 'get';
@@ -21,7 +21,6 @@ class QueryBuilder implements ManagerInterface {
     const CHILD_ONLY = 'childOnly';
     const PARENT_AND_CHILD = 'parentAndChild';
 
-    
     private $fields = null; //derived from passed in array
     private $fieldNames = array(); //derived from values
     private $values = null;
@@ -43,7 +42,7 @@ class QueryBuilder implements ManagerInterface {
     private $queryingI18n = false;
     private $isBulkInsert = false;
     private $isLikeSearch = false;
-    
+
     public function __construct($injectables = array()) {
         if (array_key_exists('dbConnection', $injectables)) {
             //perhaps using a project db
@@ -54,7 +53,7 @@ class QueryBuilder implements ManagerInterface {
     public function setIsLikeSearch($isLike) {
         $this->isLikeSearch = $isLike;
     }
-    
+
     public function join(array $joins) {
         if (is_null($this->joinTables)) {
             $this->joinTables = array();
@@ -65,7 +64,7 @@ class QueryBuilder implements ManagerInterface {
     private function buildJoins() {
         $retval = '';
         foreach ($this->joinTables as $objectName => $join) {
-            
+
             $object = $this->buildEntity($objectName);
 
             $retval .= ' LEFT JOIN ' . $object->getDBName() . $object->getTableName() . ' ON ' . $join[0] . ' = ' . $join[1];
@@ -81,12 +80,12 @@ class QueryBuilder implements ManagerInterface {
 
         return $retval;
     }
-    
+
     private function buildEntity($className) {
-        if(is_null($this->entityManager)) {
+        if (is_null($this->entityManager)) {
             return new $className();
         }
-        
+
         return $this->entityManager->getEntity($className);
     }
 
@@ -107,7 +106,7 @@ class QueryBuilder implements ManagerInterface {
     }
 
     private function init(SQLInterface $entity, $i18nQueryType, $queryType, $resetParams) {
-        if($resetParams) {
+        if ($resetParams) {
             $this->fields = null;
         }
         $this->tableColumns = null;
@@ -221,7 +220,7 @@ class QueryBuilder implements ManagerInterface {
         $select = 'SELECT COUNT(' . $entity->getDbName() . $this->tableName . '.id) as rowCount ';
 
 
-        $select .= ' FROM ' .  $this->tableName;
+        $select .= ' FROM ' . $this->tableName;
         if (!is_null($this->i18nJoin)) {
             $select .= $this->i18nJoin;
         }
@@ -232,7 +231,7 @@ class QueryBuilder implements ManagerInterface {
         unset($this->andFilter['directive::OFFSET']);
         unset($this->andFilter['directive::LIMIT']);
         unset($this->andFilter['directive::DIRECTION']);
-        
+
         $select .= $this->getWhereStatement();
 
         return $select;
@@ -241,12 +240,12 @@ class QueryBuilder implements ManagerInterface {
     private function buildSelectStatement($firstRowOnly = false, SQLInterface $entity, $queryType) {
         $select = 'SELECT ';
 
-        
+
         if (!is_null($this->fields)) {
             $select .= implode(',', $this->fields);
-        }elseif (in_array('id', $this->tableColumns)) {
+        } elseif (in_array('id', $this->tableColumns)) {
             $select .= '*, ' . $entity->getDBName() . $this->tableName . '.id as ' . $this->tableName . '_id';
-        }elseif($queryType == self::CHILD_ONLY) {
+        } elseif ($queryType == self::CHILD_ONLY) {
             $select .= '*'; //this is because there's no guarantee we have an id column on child only queries
         } elseif (!$this->queryingI18n && substr($this->tableName, -4) != 'I18n' && in_array($this->tableName . '_id', $this->tableColumns)) {
             $select .= '*, ' . $entity->getDBName() . $this->tableName . '.id as ' . $this->tableName . '_id';
@@ -256,7 +255,7 @@ class QueryBuilder implements ManagerInterface {
         }
 
         $select .= ' FROM ' . $entity->getDBName() . $this->tableName;
-        
+
         if (!is_null($this->i18nJoin)) {
             $select .= $this->i18nJoin;
         }
@@ -343,30 +342,30 @@ class QueryBuilder implements ManagerInterface {
         }
 
         $where = '';
-        
+
         foreach ($this->andFilter as $key => $val) {
-         
+
             if (!$this->checkColumnExists($key) || strpos($key, 'directive::') !== false) {
-                
+
                 continue;
             }
-        
+
             $whereTable = '';
-            if(in_array($key, $this->tableColumns)) {
+            if (in_array($key, $this->tableColumns)) {
                 $whereTable = '`' . $this->tableName . '`.';
-            }elseif(!is_null($this->tableI18nColumns) && in_array($key, $this->tableI18nColumns)) {
+            } elseif (!is_null($this->tableI18nColumns) && in_array($key, $this->tableI18nColumns)) {
                 $whereTable = '`' . $this->tableName . 'I18n' . '`.';
             }
-            if($this->isLikeSearch) {
+            if ($this->isLikeSearch) {
                 $where .= ' AND (' . $whereTable . '`' . $key . '` like \'%' . $val . '%\'';
             } else {
-                if($val == 'null') {
+                if ($val == 'null') {
                     $where .= ' AND ( IFNULL(' . $whereTable . '`' . $key . '`, 0) = 0';
                 } else {
                     $where .= ' AND (' . $whereTable . '`' . $key . '` = \'' . $val . '\'';
                 }
             }
-            
+
 //            if(!is_null($this->encodingHandler)) {
 //                $where .= ' or `' . $key. '` = \'' . $this->encodingHandler->ascii2hex($val).'\'';
 //            }
@@ -378,15 +377,17 @@ class QueryBuilder implements ManagerInterface {
     }
 
     private function checkColumnExists($column) {
-        if(in_array($column, $this->tableColumns)) {
+
+        if (in_array($column, $this->tableColumns)) {
             return true;
         }
-        if(!is_null($this->tableI18nColumns) && in_array($column, $this->tableI18nColumns)) {
+        if (!is_null($this->tableI18nColumns) && in_array($column, $this->tableI18nColumns)) {
             return true;
         }
-        
+
         return false;
     }
+
     private function buildOrWhereFilter() {
         if (is_null($this->orFilter) || count($this->orFilter) == 0) {
             return '';
@@ -402,12 +403,12 @@ class QueryBuilder implements ManagerInterface {
                 continue;
             }
             $whereTable = '';
-            if(in_array($key, $this->tableColumns)) {
+            if (in_array($key, $this->tableColumns)) {
                 $whereTable = '`' . $this->tableName . '`.';
-            }elseif(!is_null($this->tableI18nColumns) &&in_array($key, $this->tableI18nColumns)) {
+            } elseif (!is_null($this->tableI18nColumns) && in_array($key, $this->tableI18nColumns)) {
                 $whereTable = '`' . $this->tableName . 'I18n' . '`.';
             }
-            if($this->isLikeSearch) {
+            if ($this->isLikeSearch) {
                 $where .= ' OR (' . $whereTable . '`' . $key . '` like \'%' . $val . '%\'';
             } else {
                 $where .= ' OR (' . $whereTable . '`' . $key . '` = \'' . $val . '\'';
@@ -467,28 +468,26 @@ class QueryBuilder implements ManagerInterface {
             } else {
                 $values .= ', `' . $key . '` = \'' . $val . '\'';
             }
-            if($key == 'lastModified') {
+            if ($key == 'lastModified') {
                 $modifiedColumn = true;
             }
         }
-        
-        if(!$modifiedColumn && in_array('lastModified', $this->tableColumns)) {
+
+        if (!$modifiedColumn && in_array('lastModified', $this->tableColumns)) {
             $values .= ', `lastModified` = null';
         }
-        
+
         return substr($values, 1);
     }
 
     public function setBulkInsert(array $values) {
         $this->isBulkInsert = true;
         $this->values = $values;
-       
     }
 
     private function parseValuesToInsert() {
         $values = '';
         $modifiedColumn = false;
-        print_r($this->tableColumns);
 
         if (is_array(current($this->values)) && $this->isBulkInsert) {
             return $this->parseArray();
@@ -501,13 +500,13 @@ class QueryBuilder implements ManagerInterface {
                 continue;
             }
             $this->fieldNames[] = $key;
-            
+
             if (strtolower($value) == 'null') {
                 $values .= ', null';
             } else {
                 $values .= ', \'' . ($value) . '\'';
             }
-            if($key == 'lastModified') {
+            if ($key == 'lastModified') {
                 $modifiedColumn = true;
             }
         }
@@ -515,19 +514,19 @@ class QueryBuilder implements ManagerInterface {
 //        if(!$modifiedColumn && in_array('lastModified', $this->tableColumns)) {
 //            $values .= ', `lastModified` = null';
 //        }
-        
+
         return ' VALUES (' . substr($values, 1) . ')';
     }
 
     private function parseArray() {
         $retval = '';
         $this->isBulkInsert = true;
-         
-       
+
+
         foreach ($this->values as $row) {
             $rowVal = '';
             foreach ($row as $key => $value) {
-                
+
                 if (!in_array($key, $this->tableColumns)) {
                     continue;
                 }
@@ -540,31 +539,29 @@ class QueryBuilder implements ManagerInterface {
                 } else {
                     $rowVal .= ', \'' . ($value) . '\'';
                 }
-                
             }
-            
+
             if (strlen($rowVal) > 4) {
                 //only add if we hold a value
                 $retval .= ', (' . substr($rowVal, 1) . ')';
             }
-            
         }
 
-        
-        
+
+
         return ' VALUES ' . substr($retval, 1);
     }
 
     private function parseDirectives() {
-        if(is_null($this->andFilter)) {
+        if (is_null($this->andFilter)) {
             return;
         }
-        
+
         //group by is important to get before order by so lets deal with it first
-        if(array_key_exists('directive::GROUP_BY', $this->andFilter)) {
+        if (array_key_exists('directive::GROUP_BY', $this->andFilter)) {
             
         }
-        
+
         foreach ($this->andFilter as $key => $value) {
 
             if (strpos($key, 'directive::') === FALSE) {
@@ -593,13 +590,13 @@ class QueryBuilder implements ManagerInterface {
     }
 
     private function setOrderBy($columnAndDirection) {
-        if(strlen($this->orderBy) == 0) {
+        if (strlen($this->orderBy) == 0) {
             $this->orderBy = ' ORDER BY ' . $columnAndDirection;
         } else {
             $this->orderBy .= ', ' . $columnAndDirection;
-        }         
+        }
     }
-    
+
     private function setGroupBy($column) {
         $this->groupBy = ' GROUP BY ' . $column;
     }
@@ -616,26 +613,27 @@ class QueryBuilder implements ManagerInterface {
     private function parseFieldNames() {
 
         if (is_null($this->fields)) {
-           
+
             if (is_null($this->fieldNames)) {
-                
+
                 $firstRow = ($this->values[0]);
-               //we only want column names for passed values so that our insert column count matches
+                //we only want column names for passed values so that our insert column count matches
                 $passedColumns = array_intersect(array_keys($firstRow), $this->tableColumns);
-       
+
                 return '(`' . implode('`,`', $passedColumns) . '`)';
             }
             return '(`' . implode('`,`', $this->fieldNames) . '`)';
         }
-        
+
         if (!is_array($this->fields)) {
             return '(`' . $this->fields . '`)';
         }
-        
+
         return '(`' . implode('`,`', $this->fields) . '`)';
     }
 
     public function setDBConnection(DBConnection $conn) {
         $this->dbConnection = $conn;
     }
+
 }

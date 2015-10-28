@@ -13,21 +13,19 @@ namespace Gossamer\Pesedget\Sql\Expressions;
 
 use Gossamer\Pesedget\Sql\SqlDecorator;
 
-
 /**
- * Join
+ * From
  *
  * @author Dave Meikle
  */
-class Join extends SqlDecorator {
-      
+class From extends SqlDecorator {
+    
     public function __construct($tableName, $alias = null) {
         parent::set("$tableName $alias");
     }
 
     public function __toString() {
-        return 'JOIN ' . $this->sqlStatement;
+        return 'FROM ' . $this->sqlStatement;
     }
-
 
 }

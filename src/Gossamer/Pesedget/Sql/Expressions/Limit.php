@@ -13,21 +13,22 @@ namespace Gossamer\Pesedget\Sql\Expressions;
 
 use Gossamer\Pesedget\Sql\SqlDecorator;
 
-
 /**
- * Join
+ * Limit
  *
  * @author Dave Meikle
  */
-class Join extends SqlDecorator {
-      
-    public function __construct($tableName, $alias = null) {
-        parent::set("$tableName $alias");
+class Limit extends SqlDecorator {
+    
+    public function __construct($offset = null, $limit = null) {
+        parent::set("$offset, $limit");
     }
 
     public function __toString() {
-        return 'JOIN ' . $this->sqlStatement;
+        if(strlen(str_replace(' ','',$this->sqlStatement)) == 1) {
+            return '';
+        }
+        return ' LIMIT ' . $this->sqlStatement;
     }
-
 
 }

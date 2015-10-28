@@ -13,21 +13,22 @@ namespace Gossamer\Pesedget\Sql\Expressions;
 
 use Gossamer\Pesedget\Sql\SqlDecorator;
 
-
 /**
- * Join
+ * GroupBy
  *
  * @author Dave Meikle
  */
-class Join extends SqlDecorator {
-      
-    public function __construct($tableName, $alias = null) {
-        parent::set("$tableName $alias");
+class GroupBy extends SqlDecorator {
+    
+     public function __construct($column, $direction = 'ASC') {
+        parent::set("$column $direction");
     }
 
     public function __toString() {
-        return 'JOIN ' . $this->sqlStatement;
+        if(strlen(str_replace(' ', '', $this->sqlStatement)) == 0) {
+            return '';
+        }
+        return ' GROUP BY ' . $this->sqlStatement;
     }
-
 
 }
