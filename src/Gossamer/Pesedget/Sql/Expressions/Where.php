@@ -29,15 +29,17 @@ class Where extends SqlDecorator {
 
     public function __toString() {
         $retval = '';
+
         foreach ($this->sqlStatement as $row) {
             if (is_array($row)) {
                 $retval .= $row[0] . ' (' . $row[1] . ')';
             } else {
-                $retval = $this->concatenator . ' ' . $row;
+                $retval .= $this->concatenator . ' ' . $row;
             }
         }
+
         //return ' WHERE (' . implode(') ' . $this->concatenator . ' (', $this->sqlStatement) . ')';
-        return ' WHERE ' . strlen($retval) > 0 ? substr($retval, 4) : '';
+        return ' WHERE ' . (strlen($retval) > 0 ? substr($retval, 4) : '');
     }
 
 }
