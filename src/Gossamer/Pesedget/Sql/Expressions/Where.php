@@ -20,12 +20,15 @@ use Gossamer\Pesedget\Sql\SqlDecorator;
  */
 class Where extends SqlDecorator {
 
+    private $concatenator;
+
     public function __construct(array $filters, $concatenator = 'AND') {
         parent::set($filters);
+        $this->concatenator = $concatenator;
     }
 
     public function __toString() {
-        return ' WHERE (' . implode(') ' . $concatenator . ' (', $this->sqlStatement) . ')';
+        return ' WHERE (' . implode(') ' . $this->concatenator . ' (', $this->sqlStatement) . ')';
     }
 
 }
