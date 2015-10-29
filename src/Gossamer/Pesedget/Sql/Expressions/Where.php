@@ -28,7 +28,16 @@ class Where extends SqlDecorator {
     }
 
     public function __toString() {
-        return ' WHERE (' . implode(') ' . $this->concatenator . ' (', $this->sqlStatement) . ')';
+        $retval = '';
+        foreach ($this->sqlStatement as $row) {
+            if (is_array($row)) {
+                $retval .= $row[0] . ' (' . $row[1] . ')';
+            } else {
+                $retval = $this->concatenator . ' ' . $row;
+            }
+        }
+        //return ' WHERE (' . implode(') ' . $this->concatenator . ' (', $this->sqlStatement) . ')';
+        return $retval;
     }
 
 }
