@@ -57,7 +57,7 @@ class SqlBuilderTest extends \tests\BaseTest {
         $builder = new SqlBuilder();
         $builder->add('select', new Select(array('firstname', 'lastname')))
                 ->add('from', new From('Staff', 's'))
-                ->add('where', new Where(array('firstname = "dave"')))
+                ->add('where', new Where(array('firstname = "dave"', array('or' => 'lastname = "meikle"'))))
                 ->add('orderBy', new OrderBy('lastname, firstname', 'ASC'));
 
         echo $builder->toSql() . "\r\n";

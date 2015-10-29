@@ -31,10 +31,12 @@ class Where extends SqlDecorator {
         $retval = '';
 
         foreach ($this->sqlStatement as $row) {
+            ;
             if (is_array($row)) {
-                $retval .= $row[0] . ' (' . $row[1] . ')';
+                $key = key($row);
+                $retval .= ' ' . $key . ' (' . $row[$key] . ')';
             } else {
-                $retval .= $this->concatenator . ' ' . $row;
+                $retval .= ' ' . $this->concatenator . ' (' . $row . ')';
             }
         }
 
