@@ -37,7 +37,7 @@ class Where extends SqlDecorator {
             }
         }
         //return ' WHERE (' . implode(') ' . $this->concatenator . ' (', $this->sqlStatement) . ')';
-        return $retval;
+        return ' WHERE ' . strlen($retval) > 0 ? substr($retval, 4) : '';
     }
 
 }
