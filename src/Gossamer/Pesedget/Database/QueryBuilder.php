@@ -321,7 +321,7 @@ class QueryBuilder implements ManagerInterface {
         }
         if (strlen($orWhere) > 0) {
             if ($hasFilter) {
-                
+
             }
             $where .= (($hasFilter) ? ' OR ' : '') . $orWhere;
             $hasFilter = true;
@@ -559,7 +559,7 @@ class QueryBuilder implements ManagerInterface {
 
         //group by is important to get before order by so lets deal with it first
         if (array_key_exists('directive::GROUP_BY', $this->andFilter)) {
-            
+
         }
 
         foreach ($this->andFilter as $key => $value) {

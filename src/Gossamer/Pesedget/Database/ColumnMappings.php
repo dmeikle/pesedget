@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Gossamer\Pesedget\Database;
 
 use Gossamer\Pesedget\Database\DBConnection;
@@ -8,15 +7,14 @@ use Gossamer\Pesedget\Utils\Config;
 use Gossamer\Pesedget\Utils\ConfigManager;
 use Gossamer\Pesedget\Exceptions\TableNotFoundException;
 
-
 /**
  * Column Mappings Class - gets entity columns from table and serializes array
  *
  * Author: Dave Meikle
  * Copyright: Quantum Unit Solutions 2013
  */
-class ColumnMappings
-{
+class ColumnMappings {
+
     /**
      * list of tables mapped and loaded
      */
@@ -27,14 +25,13 @@ class ColumnMappings
      */
     private $dbConnection = null;
 
-
     /**
      * constructor
      *
      * @param DBConnection  connection
      */
-    public function __construct(DBConnection $dbConnection){
-        if(strlen(__CACHE_DIRECTORY) < 1){
+    public function __construct(DBConnection $dbConnection) {
+        if (strlen(__CACHE_DIRECTORY) < 1) {
             throw new \RuntimeException('__CACHE_DIRECTORY must be defined during bootstrap');
         }
 
@@ -48,9 +45,9 @@ class ColumnMappings
      *
      * @return array    list of columns
      */
-    public function getTableColumnList($tableName){
+    public function getTableColumnList($tableName) {
 
-        if(!array_key_exists($tableName, $this->tableList)){
+        if (!array_key_exists($tableName, $this->tableList)) {
 
             $this->addColumnMap($tableName, $this->getColumnMappingsFromConfig($tableName));
         }
@@ -64,7 +61,7 @@ class ColumnMappings
      * @param string    tableName
      * @param array     list of columns
      */
-    private function addColumnMap($tableName, $columns = array()){
+    private function addColumnMap($tableName, $columns = array()) {
 
         $this->tableList[$tableName] = $columns;
     }
@@ -77,35 +74,32 @@ class ColumnMappings
      * @return array    list of columns
      *
      */
-    private function getColumnMappingsFromConfig($tableName){
+    private function getColumnMappingsFromConfig($tableName) {
 
-        $filename =  "$tableName.conf";
+        $filename = "$tableName.conf";
         $configManager = new ConfigManager();
-	$config = $configManager->getConfiguration($filename);
+        $config = $configManager->getConfiguration($filename);
 
-        if(is_null($config)){
+        if (is_null($config)) {
             $result = $this->dbConnection->query('SHOW COLUMNS FROM ' . $tableName);
-            
-            if(is_null($result)) {
-                
+
+            if (is_null($result)) {
+
                 throw new TableNotFoundException('table ' . $tableName . ' not found');
             }
-        
+
             $columnNames = array();
-            foreach($result as $object => $values) {
+            foreach ($result as $object => $values) {
                 //array_push($columnNames, array($values['Field'] => $values));
                 $columnNames[$values['Field']] = $values;
             }
 
-           $config = new Config($columnNames);           
-           
-           $configManager->saveConfiguration($filename, $config);
+            $config = new Config($columnNames);
+
+            $configManager->saveConfiguration($filename, $config);
         }
 
         return $config->toArray();
-
     }
-    
-    
 
 }
