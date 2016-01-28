@@ -27,7 +27,7 @@ class LikeJoinParam extends SqlDecorator {
 
     public function __toString() {
         $retval = '';
-        print_r($this->sqlStatement);
+
         foreach ($this->sqlStatement as $key => $value) {
             if (!is_array($value)) {
                 $retval .= ' OR (' . $key . ' like \'%' . $value . '%\')';
