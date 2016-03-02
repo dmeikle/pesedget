@@ -50,6 +50,10 @@ class QueryBuilder implements ManagerInterface {
         }
     }
 
+    public function __destruct() {
+        $this->dbConnection = null;
+    }
+
     public function setIsLikeSearch($isLike) {
         $this->isLikeSearch = $isLike;
     }
