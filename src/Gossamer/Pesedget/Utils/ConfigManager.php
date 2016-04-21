@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Gossamer\Pesedget\Utils;
 
 use Gossamer\Pesedget\Utils\ManagerInterface;
@@ -13,8 +12,7 @@ use Gossamer\Caching\CacheManager;
  * Author: Dave Meikle
  * Copyright: Quantum Unit Solutions 2013
  */
-class ConfigManager implements ManagerInterface
-{
+class ConfigManager implements ManagerInterface {
 
     /**
      * path to locate/save configurations
@@ -31,8 +29,7 @@ class ConfigManager implements ManagerInterface
      *
      * @param array injectables
      */
-    public function __construct($injectables = array())
-    {
+    public function __construct($injectables = array()) {
 
     }
 
@@ -43,33 +40,31 @@ class ConfigManager implements ManagerInterface
      *
      * @return string   path to folder for saving/access
      */
-    private function parseFilepath($filepath)
-    {
+    private function parseFilepath($filepath) {
 
         $retval = explode('/', $filepath);
         array_pop($retval);
- 
+
         return implode('/', $retval);
     }
-    
+
     /**
      * getConfiguration - loads the configuration
      *
      * @param string    filename
      * @param Config    loaded config
      */
-    public function getConfiguration($filename)
-    {
-        
+    public function getConfiguration($filename) {
+
         $cacheManager = new CacheManager();
         $configuration = $cacheManager->retrieveFromCache('/' . $filename);
-        if(!is_array($configuration)) {
+        if (!is_array($configuration)) {
             return null;
         }
         $config = new Config($configuration);
+        $cacheManager = null;
 
         return $config;
-       
     }
 
     /**
@@ -78,14 +73,11 @@ class ConfigManager implements ManagerInterface
      * @param string    filename
      * @param Config    config
      */
-    public function saveConfiguration($filename, Config $config)
-    {
+    public function saveConfiguration($filename, Config $config) {
         $this->workingPath = $this->parseFilepath($filename);
-            
+
         $cacheManager = new CacheManager();
         $cacheManager->saveToCache('/' . $filename, $config->toDetailsArray());
-        
     }
 
 }
-

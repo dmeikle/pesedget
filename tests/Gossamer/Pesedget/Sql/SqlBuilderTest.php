@@ -16,8 +16,10 @@ use Gossamer\Pesedget\Sql\Expressions\Select;
 use Gossamer\Pesedget\Sql\Expressions\From;
 use Gossamer\Pesedget\Sql\Expressions\Where;
 use Gossamer\Pesedget\Sql\Expressions\OrderBy;
+use Gossamer\Pesedget\Sql\Expressions\Join;
 use Gossamer\Pesedget\Sql\Expressions\LeftJoin;
 use Gossamer\Pesedget\Sql\Expressions\JoinParam;
+use Gossamer\Pesedget\Sql\Expressions\LikeJoinParam;
 
 /**
  * SqlBuilder
@@ -57,6 +59,22 @@ class SqlBuilderTest extends \tests\BaseTest {
         $builder = new SqlBuilder();
         $builder->add('select', new Select(array('firstname', 'lastname')))
                 ->add('from', new From('Staff', 's'))
+                ->add('where', new Where(array('firstname = "dave"', array('or' => 'lastname = "meikle"'))))
+                ->add('orderBy', new OrderBy('lastname, firstname', 'ASC'));
+
+        echo $builder->toSql() . "\r\n";
+    }
+
+    /**
+     * @group where
+     */
+    public function testLikeJoin() {
+        $builder = new SqlBuilder();
+        $builder->add('select', new Select(array('firstname', 'lastname')))
+                ->add('from', new From('Staff', 's'))
+                ->add('join', new Join('StaffAuthorization', 'sa'))
+                ->add('joinParam', new JoinParam(array('s.id' => 'sa.Staff_id')))
+                ->addAnd('joinparam', new LikeJoinParam(array('sa.roles' => array('IS_SCOPE_WRITE', 'IS_ESTIMATOR'))))
                 ->add('where', new Where(array('firstname = "dave"', array('or' => 'lastname = "meikle"'))))
                 ->add('orderBy', new OrderBy('lastname, firstname', 'ASC'));
 

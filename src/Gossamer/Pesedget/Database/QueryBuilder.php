@@ -35,6 +35,7 @@ class QueryBuilder implements ManagerInterface {
     private $tableI18nColumns = null;
     private $i18nJoin = null;
     private $orderBy = null;
+    private $direction = null;
     private $groupBy = null;
     private $dbConnection = null;
     private $joinTables = null;
@@ -48,6 +49,10 @@ class QueryBuilder implements ManagerInterface {
             //perhaps using a project db
             $this->dbConnection = $injectables['dbConnection'];
         }
+    }
+
+    public function __destruct() {
+        $this->dbConnection = null;
     }
 
     public function setIsLikeSearch($isLike) {
@@ -227,7 +232,7 @@ class QueryBuilder implements ManagerInterface {
         }
         unset($this->andFilter['directive::OFFSET']);
         unset($this->andFilter['directive::LIMIT']);
-        unset($this->andFilter['directive::DIRECTION']);
+        //unset($this->andFilter['directive::DIRECTION']);
 
         $select .= $this->getWhereStatement();
 
@@ -266,6 +271,7 @@ class QueryBuilder implements ManagerInterface {
 
         $select .= $this->getGroupBy();
         $select .= $this->getOrderBy();
+        $select .= $this->getDirection();
 
         $select .= $this->getOffset($firstRowOnly, $queryType);
 
@@ -281,6 +287,12 @@ class QueryBuilder implements ManagerInterface {
     private function getOrderBy() {
         if (!is_null($this->orderBy)) {
             return $this->orderBy;
+        }
+    }
+
+    private function getDirection() {
+        if (!is_null($this->direction)) {
+            return $this->direction;
         }
     }
 
@@ -571,6 +583,7 @@ class QueryBuilder implements ManagerInterface {
             }
 
             if ('directive::ORDER_BY' == $key) {
+
                 $this->setOrderBy($value);
                 unset($this->andFilter['directive::ORDER_BY']);
             }
@@ -588,8 +601,10 @@ class QueryBuilder implements ManagerInterface {
 
     private function setOrderBy($columnAndDirection) {
         if (strlen($this->orderBy) == 0) {
+
             $this->orderBy = ' ORDER BY ' . $columnAndDirection;
         } else {
+
             $this->orderBy .= ', ' . $columnAndDirection;
         }
     }
@@ -599,7 +614,8 @@ class QueryBuilder implements ManagerInterface {
     }
 
     private function setDirection($direction) {
-        $this->orderBy .= ' ' . $direction;
+
+        $this->direction .= ' ' . $direction;
     }
 
     private function setLimit($offset, $limit) {
