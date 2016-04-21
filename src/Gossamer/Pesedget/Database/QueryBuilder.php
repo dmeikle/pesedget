@@ -273,7 +273,7 @@ class QueryBuilder implements ManagerInterface {
         $select .= $this->getOrderBy();
         $select .= $this->getDirection();
 
-        $select .= $this->getOffset($firstRowOnly, $queryType);
+        $select .= $this->getOffset($queryType, $firstRowOnly);
 
         return $select;
     }
@@ -301,7 +301,7 @@ class QueryBuilder implements ManagerInterface {
         return ' JOIN ' . $tablenameToJoin . ' ON ' . $columnsToJoinOn[0] . ' = ' . $columnsToJoinOn[1];
     }
 
-    private function getOffset($firstRowOnly = false, $queryType) {
+    private function getOffset($queryType, $firstRowOnly = false) {
         if ($firstRowOnly) {
             return ' LIMIT 1';
         }
@@ -565,6 +565,9 @@ class QueryBuilder implements ManagerInterface {
         if (is_null($this->andFilter)) {
             return;
         }
+
+        $this->limit = '';
+        $this->offset = 0;
 
         //group by is important to get before order by so lets deal with it first
         if (array_key_exists('directive::GROUP_BY', $this->andFilter)) {
