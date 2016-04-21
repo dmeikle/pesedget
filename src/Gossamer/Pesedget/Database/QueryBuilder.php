@@ -160,9 +160,7 @@ class QueryBuilder implements ManagerInterface {
 
     private function loadActualColumns(SQLInterface $entity, $i18nQueryType) {
 
-        $dbConnection = $this->getDBConnection();
-
-        $columnMappings = new ColumnMappings($dbConnection);
+        $columnMappings = new ColumnMappings($this->getDBConnection());
 
         if (!$entity instanceof AbstractI18nEntity || (is_null($i18nQueryType))) {
 
@@ -177,7 +175,6 @@ class QueryBuilder implements ManagerInterface {
             //set this flag so we can call it later
             $this->i18nJoin = $this->joinI18nTable($entity);
         } elseif (($entity instanceof AbstractI18nEntity) && self::CHILD_ONLY == $i18nQueryType) {
-
 
             $this->tableColumns = $columnMappings->getTableColumnList($entity->getI18nTablename());
         } elseif (($entity instanceof AbstractI18nEntity) && self::PARENT_ONLY == $i18nQueryType) {
@@ -270,7 +267,7 @@ class QueryBuilder implements ManagerInterface {
         $select .= $this->getGroupBy();
         $select .= $this->getOrderBy();
 
-        $select .= $this->getOffset($firstRowOnly);
+        $select .= $this->getOffset($firstRowOnly, $queryType);
 
         return $select;
     }
@@ -292,11 +289,11 @@ class QueryBuilder implements ManagerInterface {
         return ' JOIN ' . $tablenameToJoin . ' ON ' . $columnsToJoinOn[0] . ' = ' . $columnsToJoinOn[1];
     }
 
-    private function getOffset($firstRowOnly = false) {
+    private function getOffset($firstRowOnly = false, $queryType) {
         if ($firstRowOnly) {
             return ' LIMIT 1';
         }
-        if ($this->limit > 0) {
+        if ($this->limit > 0 && $queryType != self::GET_ALL_ITEMS_QUERY) {
             return ' LIMIT ' . $this->offset . ',' . $this->limit;
         }
         return '';
@@ -321,7 +318,7 @@ class QueryBuilder implements ManagerInterface {
         }
         if (strlen($orWhere) > 0) {
             if ($hasFilter) {
-                
+
             }
             $where .= (($hasFilter) ? ' OR ' : '') . $orWhere;
             $hasFilter = true;
@@ -559,7 +556,7 @@ class QueryBuilder implements ManagerInterface {
 
         //group by is important to get before order by so lets deal with it first
         if (array_key_exists('directive::GROUP_BY', $this->andFilter)) {
-            
+
         }
 
         foreach ($this->andFilter as $key => $value) {
