@@ -193,7 +193,7 @@ class DBConnection {
         } elseif (strtolower(substr($query, 0, 6) == 'update')) {
             return;
         } else {
-            $this->rowCount = mysqli_query($this->getConnection(), 'SELECT FOUND_ROWS()');
+            // $this->rowCount = mysqli_query($this->getConnection(), 'SELECT FOUND_ROWS()');
         }
 
         //mysql_close($conn);
