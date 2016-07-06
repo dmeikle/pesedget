@@ -19,11 +19,11 @@ class ColumnMappings {
      * list of tables mapped and loaded
      */
     private $tableList = array();
-
+    
     /**
      * DBConnection
      */
-    private $dbConnection = null;
+    protected $dbConnection = null;
 
     /**
      * constructor
@@ -74,7 +74,7 @@ class ColumnMappings {
      * @return array    list of columns
      *
      */
-    private function getColumnMappingsFromConfig($tableName) {
+    protected function getColumnMappingsFromConfig($tableName) {
 
         $filename = "$tableName.conf";
         $configManager = new ConfigManager();
@@ -101,5 +101,7 @@ class ColumnMappings {
 
         return $config->toArray();
     }
+    
+   
 
 }

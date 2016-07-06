@@ -1,4 +1,10 @@
 <?php
+/**
+ * Created by PhpStorm.
+ * User: user
+ * Date: 7/5/2016
+ * Time: 7:20 PM
+ */
 
 namespace Gossamer\Pesedget\Database;
 
@@ -7,7 +13,17 @@ use Gossamer\Pesedget\Database\ColumnMappings;
 use Gossamer\Pesedget\Database\EntityManager;
 use Monolog\Logger;
 
-class DBConnection implements ConnectionInterface{
+
+/**
+ * Class MSDBConnection
+ * @package Gossamer\Pesedget\Database
+ *
+ * @requirements:
+ * sudo apt-get install php5-odbc
+ *
+ */
+class MSDBConnection implements ConnectionInterface
+{
 
     protected $host;
     protected $user;
@@ -80,28 +96,32 @@ class DBConnection implements ConnectionInterface{
 
     public function beginTransaction() {
         $this->getConnection();
-        mysqli_query($this->conn, "BEGIN");
+        mssql_query("BEGIN TRANSACTION");
     }
 
     public function commitTransaction() {
         $this->getConnection();
-        mysqli_query($this->conn, "COMMIT");
+        mssql_query("COMMIT");
     }
 
     public function rollbackTransaction() {
         $this->getConnection();
-        mysqli_query($this->conn, "ROLLBACK");
+        mssql_query("ROLLBACK");
     }
 
     public function getConnection() {
-        if (is_null($this->conn) || !$this->conn->ping()) {
-            $this->conn = @mysqli_connect($this->host, $this->user, $this->pass, $this->db);
-            if (is_bool($this->conn) || !mysqli_ping($this->conn)) {
+        if (is_null($this->conn) || !($this->conn)) {
+
+            $this->conn = \mssql_connect($this->host, $this->user, $this->pass);
+
+            if (is_bool($this->conn)) {
                 throw new \Exception('unable to connect to db with provided credentials');
             }
+            mssql_select_db ($this->db, $this->conn);
+
         }
 
-        mysqli_query($this->conn, 'SET NAMES "utf8"');
+        //mysqli_query($this->conn, 'SET NAMES "utf8"');
 
         return $this->conn;
     }
@@ -174,7 +194,8 @@ class DBConnection implements ConnectionInterface{
     }
 
     public function query($query, $fetch = true) {
-
+        error_reporting(E_ALL);
+        ini_set('display_errors', 1);
         $this->lastQuery = $query;
 
         //mysql_select_db($this->db);
@@ -183,7 +204,7 @@ class DBConnection implements ConnectionInterface{
         }
 
 
-        $results = mysqli_query($this->getConnection(), utf8_decode($query));
+        $results = mssql_query(utf8_decode($query),$this->getConnection());
 
 
         if (strtolower(substr($query, 0, 6)) == 'delete') {
@@ -193,13 +214,13 @@ class DBConnection implements ConnectionInterface{
         } elseif (strtolower(substr($query, 0, 6) == 'update')) {
             return;
         } else {
-            $this->rowCount = mysqli_query($this->getConnection(), 'SELECT FOUND_ROWS()');
+            $this->rowCount = mssql_query("SELECT CONVERT(bigint, rows) FROM sysindexes WHERE id = OBJECT_ID('" . $this->getTablename($query) . "') AND indid < 2",$this->getConnection());
         }
 
         //mysql_close($conn);
         if ($fetch && $results) {
             $stack = array();
-            while ($ra = mysqli_fetch_array($results, MYSQL_ASSOC)) {
+            while ($ra = mssql_fetch_assoc($results)) {
                 array_push($stack, $ra);
             }
 
@@ -210,9 +231,29 @@ class DBConnection implements ConnectionInterface{
             return;
         }
 
-        $insertId = mysqli_insert_id($this->getConnection());
+       return $this->getInsertId();
+    }
 
-        return $insertId;
+    private function getTablename($query) {
+        $tmp = explode(' ', $query);
+
+        while ($chunk = array_shift($tmp)) {
+            if(strtolower($chunk) == 'into' || strtolower($chunk) == 'from' || strtolower($chunk) == 'update') {
+                return array_shift($tmp);
+            }
+        }
+    }
+
+    private function getInsertId() {
+        $id = "";
+
+        $rs = mssql_query("SELECT @@identity AS id");
+        if ($row = mssql_fetch_row($rs)) {
+            $id = trim($row[0]);
+        }
+        mssql_free_result($rs);
+
+        return $id;
     }
 
     public function getTableColumnMappings(AbstractEntity $entity) {
@@ -238,3 +279,26 @@ class DBConnection implements ConnectionInterface{
     }
 
 }
+
+/*
+ * I worked on a project with a MS SQL server 2008 containing data of NVARCHAR type in multiple languages,
+including asian characters. It is a known issue, that the PHP MSSQL functions are not able to retrieve
+unicode data form NVARCHAR or NTEXT data fields.
+
+I spent some time searching for possible solutions and finaly found a work arround, that provides correct
+display of latin and asian fonts from a NVARCHAR field.
+
+Do a SQL query, while you convert the NVARCHAR data first to VARBINARY and then to VARCHAR
+
+SELECT
+CONVERT(VARCHAR(MAX),CONVERT(VARBINARY(MAX),nvarchar_col)) AS x
+FROM dbo.table
+
+While you fetch the result set in PHP, use the iconv() function to convert the data to unicode
+
+<?php $x = iconv("UCS-2LE","UTF-8",$row['x']); ?>
+
+Now you can ouput the text to UTF-8 encoded page with the correct characters.
+
+This workarround did run on IIS 6.0 with PHP 5.2.6 running as FastCGI.
+ */

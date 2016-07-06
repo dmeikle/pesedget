@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="9110df3a-53cf-404a-9f72-260cd6d682d7" name="vm db-repo" url="http://192.168.1.24">
+        <fileTransfer host="192.168.1.24" port="22" rootFolder="/var/www" accessType="SFTP" password="dfc3dfd9dfc4dfc5dfdedfc2dfcfdfd8dfcf" username="dave">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" />
+          </advancedOptions>
+          <option name="port" value="22" />
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</project>

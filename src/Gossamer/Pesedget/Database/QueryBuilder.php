@@ -7,6 +7,7 @@ use Gossamer\Pesedget\Database\SQLInterface;
 use Gossamer\Pesedget\Entities\AbstractI18nEntity;
 use Gossamer\Pesedget\Database\DBConnection;
 use Gossamer\Pesedget\Database\ColumnMappings;
+use Gossamer\Pesedget\Database\ColumnDataTypeMappings;
 
 class QueryBuilder implements ManagerInterface {
 
@@ -33,6 +34,7 @@ class QueryBuilder implements ManagerInterface {
     private $primaryKeys = null;
     private $tableColumns = null;
     private $tableI18nColumns = null;
+    private $tableColumnTypes = null;
     private $i18nJoin = null;
     private $orderBy = null;
     private $direction = null;
@@ -165,32 +167,38 @@ class QueryBuilder implements ManagerInterface {
 
     private function loadActualColumns(SQLInterface $entity, $i18nQueryType) {
 
-        $columnMappings = new ColumnMappings($this->getDBConnection());
+        $columnMappings = new ColumnDataTypeMappings($this->getDBConnection());
 
         if (!$entity instanceof AbstractI18nEntity || (is_null($i18nQueryType))) {
-
-            $this->tableColumns = $columnMappings->getTableColumnList($entity->getTableName());
+            $columns = $columnMappings->getTableColumnList($entity->getTableName());
+            $this->tableColumns = array_values(array_keys($columns));
         } elseif (($entity instanceof AbstractI18nEntity) && self::PARENT_AND_CHILD == $i18nQueryType) {
-
+            $columns = $columnMappings->getTableColumnList($entity->getTableName());
             //used for select statements only, but needs to join across tables
-            $this->tableColumns = $columnMappings->getTableColumnList($entity->getTableName());
+            $this->tableColumns = array_values(array_keys($columns));
+
+            $columns = $columnMappings->getTableColumnList($entity->getI18nTablename());
             //if it's an i18n select then query the locales table too
             //array_merge($this->tableColumns, $columnMappings->getTableColumnList($entity->getI18nTablename()));
-            $this->tableI18nColumns = $columnMappings->getTableColumnList($entity->getI18nTablename());
+            $this->tableI18nColumns = array_values(array_keys($columns));
             //set this flag so we can call it later
             $this->i18nJoin = $this->joinI18nTable($entity);
         } elseif (($entity instanceof AbstractI18nEntity) && self::CHILD_ONLY == $i18nQueryType) {
-
-            $this->tableColumns = $columnMappings->getTableColumnList($entity->getI18nTablename());
+            $columns = $columnMappings->getTableColumnList($entity->getI18nTablename());
+            $this->tableColumns = array_values(array_keys($columns));
         } elseif (($entity instanceof AbstractI18nEntity) && self::PARENT_ONLY == $i18nQueryType) {
-
-            $this->tableColumns = $columnMappings->getTableColumnList($entity->getTableName());
+            $columns = $columnMappings->getTableColumnList($entity->getTableName());
+            $this->tableColumns = array_values(array_keys($columns));
         }
-
-
+print_r($columns);
         unset($columnMappings);
     }
 
+    private function setTableColumnDataTypes(array $columns) {
+        foreach ($columns as $column => $values) {
+            $this->tableColumnTypes[$column] = $values[''];
+        }
+    }
     private function joinI18nTable(SQLInterface $entity) {
 
         return ' JOIN ' . $entity->getDBName() . $entity->getI18nTablename() . ' ON ' . $entity->getTableName() . '.id = ' . $entity->getI18nTablename() .
