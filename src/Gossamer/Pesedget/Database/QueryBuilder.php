@@ -190,7 +190,7 @@ class QueryBuilder implements ManagerInterface {
             $columns = $columnMappings->getTableColumnList($entity->getTableName());
             $this->tableColumns = array_values(array_keys($columns));
         }
-print_r($columns);
+//print_r($columns);
         unset($columnMappings);
     }
 

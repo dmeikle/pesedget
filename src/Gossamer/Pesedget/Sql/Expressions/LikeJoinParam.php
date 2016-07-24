@@ -21,7 +21,7 @@ use Gossamer\Pesedget\Sql\SqlDecorator;
 class LikeJoinParam extends SqlDecorator {
 
     public function __construct(array $values) {
-        print_r($values);
+        
         parent::set($values);
     }
 
