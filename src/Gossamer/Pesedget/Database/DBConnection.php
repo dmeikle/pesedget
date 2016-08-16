@@ -199,7 +199,7 @@ class DBConnection implements ConnectionInterface{
         //mysql_close($conn);
         if ($fetch && $results) {
             $stack = array();
-            while ($ra = mysqli_fetch_array($results, MYSQL_ASSOC)) {
+            while ($ra = mysqli_fetch_array($results, MYSQLI_ASSOC)) {
                 array_push($stack, $ra);
             }
 
