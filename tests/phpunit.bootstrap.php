@@ -19,6 +19,7 @@ require_once(__SITE_PATH . '/../vendor/composer/ClassLoader.php');
       $loader->add('components', __SITE_PATH .'/src');
       $loader->add('core', __SITE_PATH .'/app');
       $loader->add('Monolog', __SITE_PATH.'/../vendor/monolog/monolog/src');
+      $loader->add('triagens', __SITE_PATH.'/../vendor/triagens/arangodb/lib');
     
 
       // activate the autoloader

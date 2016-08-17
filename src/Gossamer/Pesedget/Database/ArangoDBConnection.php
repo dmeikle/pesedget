@@ -11,83 +11,105 @@ namespace Gossamer\Pesedget\Database;
 
 use Gossamer\Pesedget\Entities\AbstractEntity;
 use Monolog\Logger;
+use triagens\ArangoDb\Collection;
+use triagens\ArangoDb\CollectionHandler;
 use triagens\ArangoDb\Connection;
+use triagens\ArangoDb\ConnectionOptions;
+use triagens\ArangoDb\DocumentHandler;
+use triagens\ArangoDb\ConnectException;
+use triagens\ArangoDb\UpdatePolicy;
 
-class ArangoDBConnection  implements ConnectionInterface
+
+class ArangoDBConnection  implements NoSQLConnectionInterface
 {
 
-    public function __construct(array $credentials)
-    {
-        parent::__construct($credentials);
+    protected $credentials;
+
+    protected $logger = null;
+
+    protected $conn = null;
+    private $rowCount = 0;
+
+    public function __construct(array $credentials = null) {
+        if (!is_null($credentials)) {
+            $this->credentials = $credentials;
+        } else {
+            //TODO: uh-oh... no db credentials exist. This will cause a known bug
+            //since at design time this EntityManager only knows about SQL
+            //based connections...
+            //$this->credentials = EntityManager::getInstance()->getCredentials();
+            throw new ConnectException('no credentials specified for ArangonDBConnection::_construct(array)');
+        }
     }
 
-    public function __destruct()
-    {
-        // TODO: Implement __destruct() method.
+    public function __destruct() {
+        $this->logger = null;
+        $this->conn = null;
     }
 
-    public function getRowCount()
-    {
-        // TODO: Implement getRowCount() method.
+
+    public function getRowCount() {
+        return $this->rowCount;
     }
 
-    public function setLogger(Logger $logger)
-    {
-        // TODO: Implement setLogger() method.
+    public function setLogger(Logger $logger) {
+        $this->logger = $logger;
     }
 
-    public function getAllRowsAsArray()
-    {
-        // TODO: Implement getAllRowsAsArray() method.
+    public function beginTransaction() {
+        $this->getConnection();
     }
 
-    public function setCustomer(SQLInterface $customer)
-    {
-        // TODO: Implement setCustomer() method.
+    public function commitTransaction() {
+        $this->getConnection();
     }
 
-    public function beginTransaction()
-    {
-        // TODO: Implement beginTransaction() method.
+    public function rollbackTransaction() {
+        $this->getConnection();
     }
 
-    public function commitTransaction()
-    {
-        // TODO: Implement commitTransaction() method.
+    public function getConnection() {
+        if (is_null($this->conn) ) {
+            $this->conn = new Connection($this->getCredentials());
+            if (is_bool($this->conn)) {
+                throw new \Exception('unable to connect to ArangoDb with provided credentials');
+            }
+        }
+
+        return $this->conn;
     }
 
-    public function rollbackTransaction()
-    {
-        // TODO: Implement rollbackTransaction() method.
+    
+    public function getCollectionHandler(Connection $connection = null) {
+        if(is_null($connection)) {
+            return new CollectionHandler($this->getConnection());
+        }
+
+        return new CollectionHandler($connection);
     }
 
-    public function getConnection()
-    {
-        // TODO: Implement getConnection() method.
-    }
+    public function getCredentials() {
+        return array(
+            ConnectionOptions::OPTION_DATABASE      => $this->credentials['database'],
+            // server endpoint to connect to
+            ConnectionOptions::OPTION_ENDPOINT => $this->credentials['endpoint'],
+            // authorization type to use (currently supported: 'Basic')
+            ConnectionOptions::OPTION_AUTH_TYPE => $this->credentials['authorizationType'],
+            // user for basic authorization
+            ConnectionOptions::OPTION_AUTH_USER => $this->credentials['user'],
+            // password for basic authorization
+            ConnectionOptions::OPTION_AUTH_PASSWD => $this->credentials['password'],
+            // connection persistence on server. can use either 'Close' (one-time connections) or 'Keep-Alive' (re-used connections)
+            ConnectionOptions::OPTION_CONNECTION => $this->credentials['connectionPersistence'],
+            // connect timeout in seconds
+            ConnectionOptions::OPTION_TIMEOUT => $this->credentials['timeout'],
+            // whether or not to reconnect when a keep-alive connection has timed out on server
+            ConnectionOptions::OPTION_RECONNECT => $this->credentials['reconnect'],
+            // optionally create new collections when inserting documents
+            ConnectionOptions::OPTION_CREATE => $this->credentials['createCollectionsOnInsert'],
+            // optionally create new collections when inserting documents
+            ConnectionOptions::OPTION_UPDATE_POLICY => UpdatePolicy::LAST,
+        );
 
-    public function preparedQuery($query, array $params, $fetch = true)
-    {
-        // TODO: Implement preparedQuery() method.
-    }
-
-    public function query($query, $fetch = true)
-    {
-        // TODO: Implement query() method.
-    }
-
-    public function getTableColumnMappings(AbstractEntity $entity)
-    {
-        // TODO: Implement getTableColumnMappings() method.
-    }
-
-    public function getLastQuery()
-    {
-        // TODO: Implement getLastQuery() method.
-    }
-
-    public function getCredentials()
-    {
-        // TODO: Implement getCredentials() method.
     }
 }
