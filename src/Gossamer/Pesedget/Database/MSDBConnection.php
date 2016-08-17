@@ -22,7 +22,7 @@ use Monolog\Logger;
  * sudo apt-get install php5-odbc
  *
  */
-class MSDBConnection implements ConnectionInterface
+class MSDBConnection implements ConnectionInterface, GossamerDBConnection
 {
 
     protected $host;

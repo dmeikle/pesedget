@@ -7,7 +7,7 @@ use Gossamer\Pesedget\Database\ColumnMappings;
 use Gossamer\Pesedget\Database\EntityManager;
 use Monolog\Logger;
 
-class DBConnection implements ConnectionInterface{
+class DBConnection implements ConnectionInterface, GossamerDBConnection{
 
     protected $host;
     protected $user;

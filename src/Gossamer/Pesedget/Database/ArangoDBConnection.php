@@ -20,7 +20,7 @@ use triagens\ArangoDb\ConnectException;
 use triagens\ArangoDb\UpdatePolicy;
 
 
-class ArangoDBConnection  implements NoSQLConnectionInterface
+class ArangoDBConnection  implements NoSQLConnectionInterface, GossamerDBConnection
 {
 
     protected $credentials;
@@ -79,7 +79,7 @@ class ArangoDBConnection  implements NoSQLConnectionInterface
         return $this->conn;
     }
 
-    
+
     public function getCollectionHandler(Connection $connection = null) {
         if(is_null($connection)) {
             return new CollectionHandler($this->getConnection());
