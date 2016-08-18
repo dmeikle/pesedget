@@ -6,7 +6,7 @@
  * Time: 1:20 PM
  */
 
-namespace Gossamer\Pesedget\Database;
+namespace Gossamer\Pesedget\Collections;
 
 
 interface NoSQLConnectionInterface

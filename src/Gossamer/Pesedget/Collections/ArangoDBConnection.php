@@ -6,7 +6,7 @@
  * Time: 4:23 PM
  */
 
-namespace Gossamer\Pesedget\Database;
+namespace Gossamer\Pesedget\Collections;
 
 
 use Gossamer\Pesedget\Entities\AbstractEntity;
@@ -18,6 +18,7 @@ use triagens\ArangoDb\ConnectionOptions;
 use triagens\ArangoDb\DocumentHandler;
 use triagens\ArangoDb\ConnectException;
 use triagens\ArangoDb\UpdatePolicy;
+use Gossamer\Pesedget\Database\GossamerDBConnection;
 
 
 class ArangoDBConnection  implements NoSQLConnectionInterface, GossamerDBConnection
@@ -38,7 +39,7 @@ class ArangoDBConnection  implements NoSQLConnectionInterface, GossamerDBConnect
             //since at design time this EntityManager only knows about SQL
             //based connections...
             //$this->credentials = EntityManager::getInstance()->getCredentials();
-            throw new ConnectException('no credentials specified for ArangonDBConnection::_construct(array)');
+            throw new ConnectException('no credentials specified for ArangoDBConnection::_construct(array)');
         }
     }
 

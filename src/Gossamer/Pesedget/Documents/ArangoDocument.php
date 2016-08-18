@@ -6,17 +6,17 @@
  * Time: 12:32 PM
  */
 
-namespace Gossamer\Pesedget\Entities;
+namespace Gossamer\Pesedget\Documents;
 
 
 use triagens\ArangoDb\Document;
 
-class ArangoEntity extends Document
+class ArangoDocument extends Document
 {
 
     /**
      * can be used as an internal configuration, but can be overwritten in each class if needed
-     * 
+     *
      * @var array
      */
     protected $fields = array('id');

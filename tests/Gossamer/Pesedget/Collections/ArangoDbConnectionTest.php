@@ -6,9 +6,9 @@
  * Time: 1:38 PM
  */
 
-namespace tests\Gossamer\Pesedget\Database;
+namespace tests\Gossamer\Pesedget\Collections;
 
-use Gossamer\Pesedget\Database\ArangoDBConnection;
+use Gossamer\Pesedget\Collections\ArangoDBConnection;
 use Gossamer\Pesedget\Database\EntityManager;
 use triagens\ArangoDb\Collection;
 use triagens\ArangoDb\Document;
