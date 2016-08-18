@@ -14,12 +14,37 @@ use triagens\ArangoDb\Document;
 class ArangoDocument extends Document
 {
 
+    protected $tablename;
+
     /**
      * can be used as an internal configuration, but can be overwritten in each class if needed
      *
      * @var array
      */
     protected $fields = array('id');
+
+
+
+    public function __construct(){
+        $this->tablename = $this->stripNamespacing(get_class($this)) . 's';
+    }
+
+    private function stripNamespacing($namespacedEntity) {
+        $chunks = explode('\\', $namespacedEntity);
+
+        return array_pop($chunks);
+    }
+
+    public function getTableName(){
+        return $this->tablename;
+    }
+
+
+    public function getClassName() {
+        $reflect = new \ReflectionClass($this);
+
+        return $reflect->getShortName();
+    }
 
     /**
      * assigns the values of the passed in params to the document.
@@ -32,8 +57,11 @@ class ArangoDocument extends Document
             $this->fields = $fields;
         }
 
-        $list = array_intersect_key($this->fields, $params);
-        foreach($list as $key => $value) {
+        foreach($params as $key => $value) {
+            if(!in_array($key, $this->fields)) {
+                continue;
+            }
+
             $this->set($key, $value);
         }
     }
