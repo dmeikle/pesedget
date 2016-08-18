@@ -25,15 +25,68 @@ class ArangoQueryBuilder
 
     private $params = array();
 
-    public function getQuery(ArangoDocument $document, $queryType = 'getall', $i18nQueryType = null, $queryingI18n = false, $resetParams = true) {
+    public function getQuery(ArangoDocument $document, $queryType = 'getall', $i18nQueryType = null, $queryingI18n = false, $resetParams = true)
+    {
 
     }
 
-    public function setParams(array $params) {
+    public function setParams(array $params)
+    {
         $this->params = $params;
     }
-    
-    private function buildSelect(ArangoDocument $document) {
 
+//    /https://www.arangodb.com/2012/06/querying-a-nosql-database-the-elegant-way/
+    private function buildSelect(ArangoDocument $document)
+    {
+        $alias = preg_split('/(?=[A-Z])/', $document->getTableName());
+        $query = 'FOR ' . $alias . ' in ' . $document->getTableName();
+        $query .= $this->getFilter($alias);
+        $query .= $this->getOffsetLimit();
+
+        $query .= 'RETURN o';
+    }
+
+    private function getFilter($alias)
+    {
+        $query = '';
+        foreach ($this->getFilterParams() as $key => $value) {
+            $query .= ' FILTER ' . $alias . '.' . $key . ' == "' . $value . '"';
+        }
+
+        return $query;
+    }
+
+    private function getFilterParams()
+    {
+        $params = $this->params;
+        foreach ($params as $key => $value) {
+            if (strpos($key, 'directive::') !== false) {
+                unset($params);
+            }
+        }
+
+        return $params;
+    }
+
+    private function getOffsetLimit()
+    {
+        $offset = '';
+        $limit = '';
+        $query = '';
+        if (array_key_exists('directive::LIMIT', $this->params)) {
+            $limit = $this->params['directive::LIMIT'];
+        }
+
+        if (array_key_exists('directive::OFFSET', $this->params)) {
+            $offset = $this->params['directive::OFFSET'];
+        }
+
+        if (strlen($offset) > 0) {
+            $query = ' LIMIT ' . $offset . ', ' . $limit;
+        } elseif (strlen($limit) > 0) {
+            $query = ' LIMIT ' . $limit;
+        }
+
+        return $query;
     }
 }
