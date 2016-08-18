@@ -85,21 +85,21 @@ class ArangoDbConnectionTest extends \tests\BaseTest
             // server endpoint to connect to
             'endpoint' => 'tcp://127.0.0.1:8529',
             // authorization type to use (currently supported: 'Basic')
-            'authorizationType' => 'Basic',
+            'AuthType' => 'Basic',
             // user for basic authorization
-            'user' => 'root',
+            'AuthUser' => 'root',
             // password for basic authorization
-            'password' => 'isnothere',
+            'AuthPasswd' => 'isnothere',
             // connection persistence on server. can use either 'Close' (one-time connections) or 'Keep-Alive' (re-used connections)
-            'connectionPersistence' => 'Keep-Alive',
+            'Connection' => 'Keep-Alive',
             // connect timeout in seconds
             'timeout' => 3,
             // whether or not to reconnect when a keep-alive connection has timed out on server
-            'reconnect' => true,
+            'Reconnect' => true,
             // optionally create new collections when inserting documents
-            'createCollectionsOnInsert' => true,
+            'createCollection' => true,
             // optionally create new collections when inserting documents
-            'updatePolicy' => UpdatePolicy::LAST,
+            'policy' => UpdatePolicy::LAST,
         );
     }
 }

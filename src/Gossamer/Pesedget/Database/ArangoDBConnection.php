@@ -94,19 +94,19 @@ class ArangoDBConnection  implements NoSQLConnectionInterface, GossamerDBConnect
             // server endpoint to connect to
             ConnectionOptions::OPTION_ENDPOINT => $this->credentials['endpoint'],
             // authorization type to use (currently supported: 'Basic')
-            ConnectionOptions::OPTION_AUTH_TYPE => $this->credentials['authorizationType'],
+            ConnectionOptions::OPTION_AUTH_TYPE => $this->credentials['AuthType'],
             // user for basic authorization
-            ConnectionOptions::OPTION_AUTH_USER => $this->credentials['user'],
+            ConnectionOptions::OPTION_AUTH_USER => $this->credentials['AuthUser'],
             // password for basic authorization
-            ConnectionOptions::OPTION_AUTH_PASSWD => $this->credentials['password'],
+            ConnectionOptions::OPTION_AUTH_PASSWD => $this->credentials['AuthPasswd'],
             // connection persistence on server. can use either 'Close' (one-time connections) or 'Keep-Alive' (re-used connections)
-            ConnectionOptions::OPTION_CONNECTION => $this->credentials['connectionPersistence'],
+            ConnectionOptions::OPTION_CONNECTION => $this->credentials['Connection'],
             // connect timeout in seconds
             ConnectionOptions::OPTION_TIMEOUT => $this->credentials['timeout'],
             // whether or not to reconnect when a keep-alive connection has timed out on server
-            ConnectionOptions::OPTION_RECONNECT => $this->credentials['reconnect'],
+            ConnectionOptions::OPTION_RECONNECT => $this->credentials['Reconnect'],
             // optionally create new collections when inserting documents
-            ConnectionOptions::OPTION_CREATE => $this->credentials['createCollectionsOnInsert'],
+            ConnectionOptions::OPTION_CREATE => $this->credentials['createCollection'],
             // optionally create new collections when inserting documents
             ConnectionOptions::OPTION_UPDATE_POLICY => UpdatePolicy::LAST,
         );
