@@ -20,10 +20,13 @@ class ArangoDocumentBuilderTest extends\tests\BaseTest
     public function testListAll() {
         define('__NAMESPACE', 'src/components');
         define('__COMPONENT_FOLDER', 'users');
+
+
         $conn = new ArangoDBConnection($this->getCredentials());
         
         $builder = new ArangoDocumentBuilder($conn);
         $document = new User();
+
         $params = array(
             'gender'=>'m'
         );

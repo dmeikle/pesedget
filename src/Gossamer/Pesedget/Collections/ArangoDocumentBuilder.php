@@ -94,7 +94,7 @@ class ArangoDocumentBuilder
     private function loadFields(ArangoDocument $document) {
         $loader = new YAMLParser();
         //check to see if it's a core component, then add 'core' to the path if yes
-        $loader->setFilePath(__SITE_PATH. DIRECTORY_SEPARATOR . __NAMESPACE . DIRECTORY_SEPARATOR . ((strpos(__NAMESPACE, 'framework') !== false) ? 'core' . DIRECTORY_SEPARATOR : '') .
+        $loader->setFilePath(__SITE_PATH. DIRECTORY_SEPARATOR . $document->getNamespace() . DIRECTORY_SEPARATOR . ((strpos( $document->getNamespace(), 'framework') !== false) ? 'core' . DIRECTORY_SEPARATOR : '') .
             __COMPONENT_FOLDER. DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . 'fields.yml');
         $config = $loader->loadConfig();
 

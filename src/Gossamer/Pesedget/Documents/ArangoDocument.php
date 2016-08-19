@@ -29,6 +29,13 @@ class ArangoDocument extends Document
         $this->tablename = $this->stripNamespacing(get_class($this)) . 's';
     }
 
+    public function getNamespace()
+    {
+        $reflector = new \ReflectionClass($this); // class Foo of namespace A
+
+        return $reflector->getNamespaceName();
+    }
+
     private function stripNamespacing($namespacedEntity) {
         $chunks = explode('\\', $namespacedEntity);
 
