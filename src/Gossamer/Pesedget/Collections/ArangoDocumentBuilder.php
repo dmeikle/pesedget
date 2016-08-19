@@ -94,19 +94,21 @@ class ArangoDocumentBuilder
     private function loadFields(ArangoDocument $document) {
         $loader = new YAMLParser();
         //check to see if it's a core component, then add 'core' to the path if yes
-        $loader->setFilePath(__SITE_PATH. DIRECTORY_SEPARATOR . $document->getNamespace() . DIRECTORY_SEPARATOR . ((strpos( $document->getNamespace(), 'framework') !== false) ? 'core' . DIRECTORY_SEPARATOR : '') .
-            __COMPONENT_FOLDER. DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . 'fields.yml');
+//        $loader->setFilePath(__SITE_PATH. DIRECTORY_SEPARATOR . $document->getNamespace() . DIRECTORY_SEPARATOR . ((strpos( $document->getNamespace(), 'framework') !== false) ? 'core' . DIRECTORY_SEPARATOR : '') .
+//            __COMPONENT_FOLDER. DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . 'fields.yml');
+        $loader->setFilePath( ((strpos( $document->getNamespace(), 'framework') !== false) ? 'core' . DIRECTORY_SEPARATOR : '') .
+            __COMPONENT_FOLDER. DIRECTORY_SEPARATOR .  'config' . DIRECTORY_SEPARATOR . 'fields.yml');
+
         $config = $loader->loadConfig();
 
         unset($loader);
 
         $tableName = $document->getTableName();
-        if(array_key_exists($tableName, $config)) {
-
-            return $config[$tableName];
+        if(is_null($config) || !array_key_exists($tableName, $config)) {
+            throw new TableNotFoundException($tableName . ' not found in fields config');
         }
 
-        throw new TableNotFoundException($tableName . ' not found in fields config');
+        return $config[$tableName];
     }
 
 }
