@@ -24,8 +24,7 @@ interface ConnectionInterface
 
     public function getAllRowsAsArray();
 
-    public function setCustomer(SQLInterface $customer);
-
+   
     public function beginTransaction();
 
     public function commitTransaction();
