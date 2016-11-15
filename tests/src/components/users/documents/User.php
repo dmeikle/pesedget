@@ -13,5 +13,8 @@ use Gossamer\Pesedget\Documents\ArangoDocument;
 
 class User extends ArangoDocument
 {
-
+    public function getNamespace()
+    {
+        return 'tests\src\components\users\documents';
+    }
 }
