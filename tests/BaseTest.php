@@ -4,8 +4,6 @@ namespace tests;
 
 use Monolog\Logger;
 use Monolog\Handler\StreamHandler;
-use triagens\ArangoDb\UpdatePolicy;
-use triagens\ArangoDb\ConnectionHandler;
 
 class BaseTest extends \PHPUnit_Framework_TestCase
 {
