@@ -86,5 +86,5 @@ class DatasourceFactory {
         
         return $datasource;
     }
-//this is a git tag test - currently v1.2
+//this is a git tag test - currently v1.1.2
 }
