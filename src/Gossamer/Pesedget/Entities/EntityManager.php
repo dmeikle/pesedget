@@ -1,8 +1,7 @@
 <?php
 
-namespace Gossamer\Pesedget\Database;
+namespace Gossamer\Pesedget\Entities;
 
-use Gossamer\Pesedget\Utils\YAMLParser;
 
 /**
  * Description of EntityManager
