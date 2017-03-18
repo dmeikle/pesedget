@@ -17,15 +17,9 @@ class EntityManager {
     private $config;
     private $entityList = null;
 
-    //to make sure it's not instantiated
-    protected function __construct() {
+   
+    protected function __construct(array $credentials) {
 
-        if (!defined(__SITE_PATH)) {
-
-            //throw new \RuntimeException('__SITE_PATH must be defined in bootstrap');
-        }
-
-        $this->loadDatabaseCredentials();
         $this->setDefaultConnection();
     }
 
@@ -43,13 +37,6 @@ class EntityManager {
         $this->defaultConnection = $this->config['default'];
     }
 
-    public static function getInstance() {
-        if (is_null(self::$manager)) {
-            self::$manager = new EntityManager();
-        }
-
-        return self::$manager;
-    }
 
     public function getConnection($dbKey = null) {
         if (is_null($dbKey)) {
@@ -78,14 +65,6 @@ class EntityManager {
         return $this->connections[$dbKey];
     }
 
-    private function loadDatabaseCredentials() {
-        $parser = new YAMLParser();
-        $parser->setFilePath(__SITE_PATH . '/app/config/credentials.yml');
-
-        $config = $parser->loadConfig();
-
-        $this->config = $config['database'];
-    }
 
     public function getCredentials($dbKey = null) {
         if (is_null($dbKey)) {
@@ -109,58 +88,5 @@ class EntityManager {
         return array_keys($this->connections);
     }
 
-    public function getEntity($namespacedPath) {
-        $entityList = $this->getEntityList();
-        //get entityName and entityPath
-        $values = $this->getEntityValues($namespacedPath);
-
-        if (!array_key_exists($values['entityPath'], $entityList)) {
-
-            //load the config for this component
-            $config = $this->loadEntityConfig($namespacedPath);
-
-            $entityList[$values['entityPath']] = $config;
-        }
-        $entity = new $namespacedPath();
-
-        if ($entityList[$values['entityPath']] === false) {
-            return $entity;
-        }
-        //ensure the key exists for this component config
-        if (array_key_exists($values['entityName'], $entityList[$values['entityPath']])
-                //ensure the entity key is there also
-                && array_key_exists('entity_db', $entityList[$values['entityPath']][$values['entityName']])) {
-            $entity->setDbName($entityList[$values['entityPath']][$values['entityName']]['entity_db']);
-        }
-
-        return $entity;
-    }
-
-    private function getEntityValues($namespacedPath) {
-        $tmp = explode('\\', $namespacedPath);
-        $retval = array();
-        $retval['entityName'] = array_pop($tmp);
-
-        //drop the entities folder
-        array_pop($tmp);
-
-        $retval['entityPath'] = implode(DIRECTORY_SEPARATOR, $tmp);
-
-        return $retval;
-    }
-
-    private function loadEntityConfig($namespacedPath) {
-        $loader = new \Gossamer\Pesedget\Utils\EntityConfigurationLoader();
-
-        return $loader->loadConfiguration($namespacedPath);
-    }
-
-    private function getEntityList() {
-        if (is_null($this->entityList)) {
-            $this->entityList = array();
-        }
-
-        return $this->entityList;
-    }
 
 }
