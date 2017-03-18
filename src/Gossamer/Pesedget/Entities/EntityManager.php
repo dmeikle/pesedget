@@ -17,7 +17,7 @@ class EntityManager {
     private $entityList = null;
 
 
-    protected function __construct(array $credentials) {
+    public function __construct(array $credentials) {
 
         $this->setDefaultConnection();
     }
