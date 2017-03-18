@@ -18,7 +18,7 @@ class EntityManager {
 
 
     public function __construct(array $credentials) {
-
+        $this->config = $credentials;
         $this->setDefaultConnection();
     }
 
